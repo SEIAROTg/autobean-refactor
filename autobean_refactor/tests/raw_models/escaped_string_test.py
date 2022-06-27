@@ -4,7 +4,6 @@ import pytest
 from autobean_refactor import parser as parser_lib
 from autobean_refactor.models import raw_models
 
-
 # (text, value)
 _ESCAPE_TEST_CASES_COMMON = [
     ('""', ''),
