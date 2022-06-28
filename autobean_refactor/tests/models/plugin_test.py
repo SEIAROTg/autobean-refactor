@@ -3,7 +3,7 @@ from lark import exceptions
 import pytest
 from autobean_refactor import parser as parser_lib
 from autobean_refactor.models import raw_models
-from autobean_refactor.tests.raw_models import conftest
+from . import conftest
 
 
 class TestPlugin:
