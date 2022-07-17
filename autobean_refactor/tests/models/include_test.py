@@ -6,7 +6,7 @@ from autobean_refactor.models import raw_models
 from . import conftest
 
 
-class TestOption:
+class TestInclude:
 
     @pytest.mark.parametrize(
         'text,filename', [
