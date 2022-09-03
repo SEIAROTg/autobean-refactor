@@ -1,7 +1,7 @@
 from lark import exceptions
 import pytest
 from autobean_refactor import models
-from . import base
+from .. import base
 
 
 class TestPostingFlag(base.BaseTestModel):
