@@ -22,6 +22,7 @@ dev = [
     "mypy>=0.991",
     "pytest>=7.2.0",
     "pytest-cov>=4.0.0",
+    "pytest-benchmark>=4.0.0",
     "mako>=1.2.4",
     "stringcase>=1.2.0",
 ]
