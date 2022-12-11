@@ -17,6 +17,16 @@ requires = ["pdm-pep517>=1.0"]
 build-backend = "pdm.pep517.api"
 
 [tool.pdm]
+[tool.pdm.build]
+includes = [
+    "autobean_refactor/",
+]
+excludes = [
+    "autobean_refactor/tests/",
+    "autobean_refactor/modelgen/",
+    "autobean_refactor/meta_models/",
+]
+
 [tool.pdm.dev-dependencies]
 dev = [
     "mypy>=0.991",
