@@ -4,7 +4,7 @@ from . import base
 from .internal import registry as _registry
 from .internal import value_properties as _value_properties
 
-_INDENT_SPLIT_RE = re.compile(';\s*')
+_INDENT_SPLIT_RE = re.compile(r';\s*')
 _Self = TypeVar('_Self', bound='BlockComment')
 
 
