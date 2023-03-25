@@ -2,6 +2,7 @@ import re
 from typing import Type, TypeVar, final
 from . import base
 from .internal import registry as _registry
+from .internal import spacing_accessors as _spacing_accessors
 from .internal import value_properties as _value_properties
 
 _INDENT_SPLIT_RE = re.compile(r';\s*')
@@ -9,7 +10,7 @@ _Self = TypeVar('_Self', bound='BlockComment')
 
 
 @_registry.token_model
-class BlockComment(base.RawTokenModel, _value_properties.RWValueWithIndent[str]):
+class BlockComment(base.RawTokenModel, _value_properties.RWValueWithIndent[str], _spacing_accessors.SpacingAccessorsMixin):
     RULE = 'BLOCK_COMMENT'
 
     @final
