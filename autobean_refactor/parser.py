@@ -1,5 +1,8 @@
+import collections
 import copy
 import enum
+import glob
+import os.path
 import pathlib
 import re
 from typing import Iterable, Iterator, Optional, Type, TypeVar
@@ -82,6 +85,17 @@ class _Floating(enum.Enum):
     RIGHT = enum.auto()
 
 
+def _get_include_paths(path: str, file: models.File) -> Iterable[str]:
+    for directive in file.raw_directives:
+        if not isinstance(directive, models.Include):
+            continue
+        matches = glob.glob(os.path.join(os.path.dirname(path), directive.filename), recursive=True)
+        if not matches:
+            lineno = directive.token_store.get_position(directive.first_token).line
+            raise ValueError(f'No files match {directive.filename!r} ({path}:{lineno})')
+        yield from matches
+
+
 class Parser:
     _lark: lark.Lark
     _token_models: dict[str, Type[models.RawTokenModel]]
@@ -118,6 +132,22 @@ class Parser:
 
     def parse(self, text: str, target: Type[_U]) -> _U:
         return self._parse(text, target, self._lark)
+
+    def parse_file_recursive(self, path: str) -> dict[str, models.File]:
+        files = {}
+        queue = collections.deque([path])
+
+        while queue:
+            path = queue.popleft()
+            if path in files:
+                continue
+            with open(path) as f:
+                text = f.read()
+            file = self.parse(text, models.File)
+            files[path] = file
+            queue.extend(_get_include_paths(path, file))
+        
+        return files
 
     def _parse(self, text: str, target: Type[_U], lark_instance: lark.Lark) -> _U:
         parser = lark_instance.parse_interactive(text=text, start=target.RULE)
