@@ -275,11 +275,10 @@ class FieldDescriptor:
         if self.cardinality == FieldCardinality.REQUIRED:
             return f'internal.required_node_property{typefix}({self.field_name})'
         if self.cardinality == FieldCardinality.OPTIONAL:
-            typefix = f'[{self.inner_type_with_comments}, _Self]' if len(self.model_types) > 1 else ''
             if self.inner_type == 'BlockComment':
-                return f'internal.optional_node_property{typefix}(internal.SurroundingCommentsMixin.{self.field_name}, {self.pivot_property_name})'
+                return f'internal.optional_node_property(internal.SurroundingCommentsMixin.{self.field_name}, {self.pivot_property_name})'
             else:
-                return f'internal.optional_node_property{typefix}({self.field_name}, {self.pivot_property_name})'
+                return f'internal.optional_node_property({self.field_name}, {self.pivot_property_name})'
         if self.cardinality == FieldCardinality.REPEATED:
             if self.has_interleaving_comments:
                 return f'internal.repeated_node_with_interleaving_comments_property{typefix}({self.field_name})'

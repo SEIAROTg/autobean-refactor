@@ -76,7 +76,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
     raw_number = internal.optional_node_property(_number, _number_pivot)
     raw_currency = internal.optional_node_property(_currency, _currency_pivot)
     raw_cost = internal.optional_node_property(_cost, _cost_pivot)
-    raw_price = internal.optional_node_property[PriceAnnotation, _Self](_price, _price_pivot)
+    raw_price = internal.optional_node_property(_price, _price_pivot)
     raw_inline_comment = internal.optional_node_property(_inline_comment, _inline_comment_pivot)
     raw_meta_with_comments = internal.repeated_node_with_interleaving_comments_property(_meta)
     raw_meta = meta_item_internal.repeated_raw_meta_item_property(raw_meta_with_comments)
