@@ -362,10 +362,15 @@ class FieldDescriptor:
             ctor = 'meta_value_internal.from_value'
         else:
             ctor = f'{self.inner_type}.from_value'
+        if self.inner_type == 'BlockComment' and self.indent_field_name:
+            assert self.cardinality != FieldCardinality.REPEATED
+            indent = f', indent={self.indent_field_name}'
+        else:
+            indent = ''
         if self.cardinality == FieldCardinality.REQUIRED:
-            return f'{ctor}({self.name})'
+            return f'{ctor}({self.name}{indent})'
         if self.cardinality == FieldCardinality.OPTIONAL:
-            return f'{ctor}({self.name}) if {self.name} is not None else None'
+            return f'{ctor}({self.name}{indent}) if {self.name} is not None else None'
         if self.cardinality == FieldCardinality.REPEATED:
             return f'map({ctor}, {self.name})'
         assert False

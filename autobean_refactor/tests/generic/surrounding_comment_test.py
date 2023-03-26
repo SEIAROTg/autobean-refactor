@@ -137,6 +137,23 @@ class TestSurroundingComment(base.BaseTestModel):
         assert self.print_model(close) == expected_text
         self.check_deepcopy_tree(close)
 
+    def test_from_value_indented(self) -> None:
+        meta_item = models.MetaItem.from_value(
+            indent=' ' * 3,
+            key='foo',
+            value='bar',
+            inline_comment='baz',
+            leading_comment='qux',
+            trailing_comment='quux')
+        assert meta_item.raw_leading_comment
+        assert meta_item.raw_leading_comment.indent == ' ' * 3
+        assert meta_item.raw_trailing_comment
+        assert meta_item.raw_trailing_comment.indent == ' ' * 3
+        assert self.print_model(meta_item) == '''\
+   ; qux
+   foo: "bar" ; baz
+   ; quux'''
+
     def test_claim_leading(self) -> None:
         close = self.parser.parse(_CLOSE_BOTH, models.Close)
         assert close.raw_leading_comment is None

@@ -159,12 +159,12 @@ class MetaItem(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Sp
             trailing_comment: Optional[str] = None,
     ) -> _Self:
         return cls.from_children(
-            leading_comment=BlockComment.from_value(leading_comment) if leading_comment is not None else None,
+            leading_comment=BlockComment.from_value(leading_comment, indent=indent) if leading_comment is not None else None,
             indent=Indent.from_value(indent),
             key=MetaKey.from_value(key),
             value=meta_value_internal.from_value(value) if value is not None else None,
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
-            trailing_comment=BlockComment.from_value(trailing_comment) if trailing_comment is not None else None,
+            trailing_comment=BlockComment.from_value(trailing_comment, indent=indent) if trailing_comment is not None else None,
         )
 
     def auto_claim_comments(self) -> None:
