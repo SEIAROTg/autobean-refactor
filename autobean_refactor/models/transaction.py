@@ -109,14 +109,17 @@ class Transaction(transaction.Transaction):
             narration: Optional[str],
             postings: Iterable[Posting],
             *,
+            leading_comment: Optional[str] = None,
             flag: str = '*',
             tags: Iterable[str] = (),
             links: Iterable[str] = (),
             inline_comment: Optional[str] = None,
             meta: Optional[Mapping[str, MetaRawValue | MetaValue]] = None,
+            trailing_comment: Optional[str] = None,
             indent_by: str = '    ',
     ) -> _Self:
         return cls.from_children(
+            leading_comment=BlockComment.from_value(leading_comment) if leading_comment is not None else None,
             date=Date.from_value(date),
             flag=TransactionFlag.from_value(flag),
             payee=EscapedString.from_value(payee) if payee is not None else None,
@@ -125,5 +128,6 @@ class Transaction(transaction.Transaction):
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
             meta=meta_item_internal.from_mapping(meta, indent=indent_by) if meta is not None else (),
             postings=postings,
+            trailing_comment=BlockComment.from_value(trailing_comment) if trailing_comment is not None else None,
             indent_by=indent_by,
         )
