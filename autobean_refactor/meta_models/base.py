@@ -28,5 +28,5 @@ class field:
     default_value: Any = None
     separators: Optional[tuple[str, ...]] = None
     separators_before: Optional[tuple[str, ...]] = None
-    default_indent: Optional[str] = None
+    indented: bool = False
     has_interleaving_comments: bool = False

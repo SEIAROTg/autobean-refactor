@@ -56,6 +56,10 @@ if model.block_commentable:
 @internal.tree_model
 class ${model.name}(${', '.join(base_classes)}):
     RULE = '${model.rule}'
+% if model.has_indented_children:
+
+    indent_by = internal.data_field[str]()
+% endif
 
 % for field in model.fields:
 % if not field.skip_field_definition:
@@ -95,11 +99,18 @@ class ${model.name}(${', '.join(base_classes)}):
 % for field in model.fields:
             ${field.ctor_param_name}: ${field.internal_type},
 % endfor
+% if model.has_indented_children:
+            *,
+            indent_by: str = '    ',
+% endif
     ):
         super().__init__(token_store)
 % for field in model.fields:
         self.${field.field_name} = ${field.ctor_param_name}
 % endfor
+% if model.has_indented_children:
+        self.indent_by = indent_by
+% endif
 
     @property
     def first_token(self) -> base.RawTokenModel:
@@ -115,6 +126,9 @@ class ${model.name}(${', '.join(base_classes)}):
 % for field in model.fields:
             type(self).${field.field_name}.clone(self.${field.field_name}, token_store, token_transformer),
 % endfor
+% if model.has_indented_children:
+            indent_by=self.indent_by,
+% endif
         )
 
     def _reattach(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> None:
@@ -129,6 +143,9 @@ class ${model.name}(${', '.join(base_classes)}):
 % for field in model.fields:
             and self.${field.field_name} == other.${field.field_name}
 % endfor
+% if model.has_indented_children:
+            and self.indent_by == other.indent_by
+% endif
         )
 
     @classmethod
@@ -142,6 +159,9 @@ class ${model.name}(${', '.join(base_classes)}):
 % for field in model.ctor_keyword_fields:
             ${field.name}: ${field.input_type}${field.from_children_default},
 % endfor
+% if model.has_indented_children:
+            indent_by: str = '    ',
+% endif
 % endif
     ) -> _Self:
 % for field in model.fields:
@@ -175,7 +195,12 @@ skip_space = True
 % for field in model.fields:
         cls.${field.field_name}.reattach(${field.ctor_param_name}, token_store)
 % endfor
-        return cls(token_store, ${', '.join(field.ctor_param_name for field in model.fields)})
+<%
+ctor_args = [field.ctor_param_name for field in model.fields]
+if model.has_indented_children:
+    ctor_args.append('indent_by=indent_by')
+%>\
+        return cls(token_store, ${', '.join(ctor_args)})
 % if model.generate_from_value:
 
     @classmethod
@@ -189,12 +214,18 @@ skip_space = True
 % for field in model.ctor_keyword_fields:
             ${field.name}: ${field.value_input_type}${field.from_value_default},
 % endfor
+% if model.has_indented_children:
+            indent_by: str = '    ',
+% endif
 % endif
     ) -> _Self:
         return cls.from_children(
 % for field in model.public_fields:
             ${field.name}=${field.construction_from_value},
 % endfor
+% if model.has_indented_children:
+            indent_by=indent_by,
+% endif
         )
 % endif
 

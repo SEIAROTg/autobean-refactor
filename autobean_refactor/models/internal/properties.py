@@ -1,4 +1,3 @@
-import abc
 import copy
 import functools
 import itertools
@@ -74,15 +73,6 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
     @property
     def repeated(self) -> Repeated[_M]:
         return self._repeated
-
-    @functools.cached_property
-    def indent(self) -> Optional[str]:
-        if self._field.default_indent is None:
-            return None
-        elif self._repeated.inferred_indent is not None:
-            return self._repeated.inferred_indent
-        else:
-            return self._field.default_indent
 
     @functools.cached_property
     def _separators(self) -> tuple[base.RawTokenModel, ...]:

@@ -1,4 +1,5 @@
-from typing import Generic, ItemsView, Iterable, Iterator, KeysView, Mapping, MutableMapping, Optional, Type, TypeVar, ValuesView, no_type_check, overload
+from typing import Callable, ItemsView, Iterable, Iterator, KeysView, Mapping, MutableMapping, Optional, TypeVar, ValuesView, no_type_check, overload
+from .punctuation import Indent
 from .meta_item import MetaItem
 from .meta_value import MetaRawValue, MetaValue
 from . import base, internal
@@ -168,8 +169,16 @@ class RepeatedMetaItemWrapper(
     def __init__(
             self,
             raw_wrapper: internal.RepeatedNodeWithInterleavingCommentsWrapper[MetaItem],
+            default_indent_getter: Callable[[], str],
     ) -> None:
         super().__init__(raw_wrapper, MetaItem)
+        self._default_indent_getter = default_indent_getter
+
+    def _get_indent(self) -> str:
+        first = next(super().__iter__(), None)
+        if first is None:
+            return self._default_indent_getter()
+        return first.indent
 
     @overload
     def __getitem__(self, index: int) -> MetaItem:
@@ -213,7 +222,7 @@ class RepeatedMetaItemWrapper(
             if item.key == index:
                 item.value = value
                 return
-        self.append(MetaItem.from_value(index, value, indent=self.indent))
+        self.append(MetaItem.from_value(index, value, indent=self._get_indent()))
 
     @overload
     def pop(self, index: int = -1) -> MetaItem:
@@ -258,10 +267,28 @@ class repeated_raw_meta_item_property(internal.cached_custom_property[RepeatedRa
             lambda instance: RepeatedRawMetaItemWrapper(inner_property.__get__(instance)))
 
 
+def _get_default_indent(
+        instance: base.RawTreeModel,
+        indent_by_field: internal.data_field[str],
+        indent_property: Optional[internal.base_ro_property[Indent, base.RawTreeModel]] = None,
+) -> str:
+    if indent_property:
+        return indent_property.__get__(instance).value + indent_by_field.__get__(instance)
+    return indent_by_field.__get__(instance)
+
+
 class repeated_meta_item_property(internal.cached_custom_property[RepeatedMetaItemWrapper, base.RawTreeModel]):
-    def __init__(self, inner_property: internal.repeated_node_with_interleaving_comments_property[MetaItem]):
+    def __init__(
+            self,
+            inner_property: internal.repeated_node_with_interleaving_comments_property[MetaItem],
+            indent_by_field: internal.data_field[str],
+            indent_property: Optional[internal.base_ro_property[Indent, base.RawTreeModel]] = None,
+    ):
         super().__init__(
-            lambda instance: RepeatedMetaItemWrapper(inner_property.__get__(instance)))
+            lambda instance: RepeatedMetaItemWrapper(
+                raw_wrapper=inner_property.__get__(instance),
+                default_indent_getter=lambda: _get_default_indent(instance, indent_by_field, indent_property),
+            ))
 
 
 def from_mapping(mapping: Mapping[str, MetaValue | MetaRawValue]) -> Iterator[MetaItem]:

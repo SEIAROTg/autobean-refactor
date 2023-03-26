@@ -136,7 +136,7 @@ class FieldDescriptor:
     default_value: Any
     separators: Optional[tuple[str, ...]]
     separators_before: Optional[tuple[str, ...]]
-    default_indent: Optional[str]
+    indented: bool
     indent_field_name: Optional[str]
     skip_field_definition: bool
     has_interleaving_comments: bool
@@ -264,8 +264,6 @@ class FieldDescriptor:
             args = [f'separators={_fmt_separators(self.separators)}']
             if self.separators_before is not None:
                 args.append(f'separators_before={_fmt_separators(self.separators_before)}')
-            if self.default_indent is not None:
-                args.append(f'default_indent={self.default_indent!r}')
             return f'internal.repeated_field[{self.inner_type_with_comments}]({", ".join(args)})'
         assert False
 
@@ -321,7 +319,11 @@ class FieldDescriptor:
             if self.value_type == 'str':
                 return f'internal.repeated_string_property({self.raw_property_name}, {self.inner_type_original})'
             elif self.value_type == 'MetaItem':
-                return f'meta_item_internal.repeated_meta_item_property({self.raw_property_name})'
+                if self.indent_field_name is None:
+                    indent_property = ''
+                else:
+                    indent_property = f', raw_{self.indent_field_name}'
+                return f'meta_item_internal.repeated_meta_item_property({self.raw_property_name}, indent_by{indent_property})'
         return None
 
     @functools.cached_property
@@ -380,6 +382,7 @@ class MetaModelDescriptor:
     name: str
     rule: str
     block_commentable: bool
+    has_indented_children: bool
     fields: list[FieldDescriptor]
 
     @functools.cached_property
@@ -513,7 +516,7 @@ _LEADING_COMMENT_FIELD = FieldDescriptor(
     default_value=None,
     separators=('Newline.from_default()',),
     separators_before=None,
-    default_indent='',
+    indented=False,
     indent_field_name=None,
     skip_field_definition=True,
     has_interleaving_comments=False,
@@ -574,7 +577,7 @@ def build_descriptor(meta_model: Type[base.MetaModel]) -> MetaModelDescriptor:
             default_value=field.default_value,
             separators=separators,
             separators_before=field.separators_before,
-            default_indent=field.default_indent,
+            indented=field.indented,
             indent_field_name=indent_field_name,
             skip_field_definition=False,
             has_interleaving_comments=field.has_interleaving_comments,
@@ -588,10 +591,13 @@ def build_descriptor(meta_model: Type[base.MetaModel]) -> MetaModelDescriptor:
         ] + field_descriptors + [
             dataclasses.replace(_TRAILING_COMMENT_FIELD, indent_field_name=indent_field_name)
         ]
+    has_indented_children = any(
+        descriptor.indented for descriptor in field_descriptors)
     return MetaModelDescriptor(
         name=meta_model.__name__,
         rule=stringcase.snakecase(meta_model.__name__),
         block_commentable=block_commentable,
+        has_indented_children=has_indented_children,
         fields=field_descriptors,
     )
 

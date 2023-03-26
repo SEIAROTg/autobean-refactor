@@ -26,6 +26,8 @@ _Self = TypeVar('_Self', bound='Posting')
 class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'posting'
 
+    indent_by = internal.data_field[str]()
+
     _indent = internal.required_field[Indent]()
     _flag = internal.optional_right_field[PostingFlag](separators=(Whitespace.from_default(),))
     _account = internal.required_field[Account]()
@@ -35,7 +37,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
     _price = internal.optional_left_field[PriceAnnotation](separators=(Whitespace.from_default(),))
     _inline_comment = internal.optional_left_field[InlineComment](separators=(Whitespace.from_default(),))
     _eol = internal.required_field[Eol]()
-    _meta = internal.repeated_field[MetaItem | BlockComment](separators=(Newline.from_default(),), default_indent='        ')
+    _meta = internal.repeated_field[MetaItem | BlockComment](separators=(Newline.from_default(),))
 
     @internal.custom_property
     def _leading_comment_pivot(self) -> base.RawTokenModel:
@@ -91,7 +93,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
     cost = raw_cost
     price = raw_price
     inline_comment = internal.optional_string_property(raw_inline_comment, InlineComment)
-    meta = meta_item_internal.repeated_meta_item_property(raw_meta_with_comments)
+    meta = meta_item_internal.repeated_meta_item_property(raw_meta_with_comments, indent_by, raw_indent)
     trailing_comment = internal.optional_indented_string_property(raw_trailing_comment, BlockComment, raw_indent)
 
     @final
@@ -110,6 +112,8 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             eol: Eol,
             repeated_meta: internal.Repeated[MetaItem | BlockComment],
             trailing_comment: Optional[BlockComment],
+            *,
+            indent_by: str = '    ',
     ):
         super().__init__(token_store)
         self._leading_comment = leading_comment
@@ -124,6 +128,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
         self._eol = eol
         self._meta = repeated_meta
         self._trailing_comment = trailing_comment
+        self.indent_by = indent_by
 
     @property
     def first_token(self) -> base.RawTokenModel:
@@ -148,6 +153,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             type(self)._eol.clone(self._eol, token_store, token_transformer),
             type(self)._meta.clone(self._meta, token_store, token_transformer),
             type(self)._trailing_comment.clone(self._trailing_comment, token_store, token_transformer),
+            indent_by=self.indent_by,
         )
 
     def _reattach(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> None:
@@ -180,6 +186,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             and self._eol == other._eol
             and self._meta == other._meta
             and self._trailing_comment == other._trailing_comment
+            and self.indent_by == other.indent_by
         )
 
     @classmethod
@@ -197,6 +204,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             inline_comment: Optional[InlineComment] = None,
             meta: Iterable[MetaItem | BlockComment] = (),
             trailing_comment: Optional[BlockComment] = None,
+            indent_by: str = '    ',
     ) -> _Self:
         eol = Eol.from_default()
         repeated_meta = cls._meta.create_repeated(meta)
@@ -227,7 +235,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
         cls._eol.reattach(eol, token_store)
         cls._meta.reattach(repeated_meta, token_store)
         cls._trailing_comment.reattach(trailing_comment, token_store)
-        return cls(token_store, leading_comment, indent, flag, account, number, currency, cost, price, inline_comment, eol, repeated_meta, trailing_comment)
+        return cls(token_store, leading_comment, indent, flag, account, number, currency, cost, price, inline_comment, eol, repeated_meta, trailing_comment, indent_by=indent_by)
 
     @classmethod
     def from_value(
@@ -244,6 +252,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             inline_comment: Optional[str] = None,
             meta: Optional[Mapping[str, MetaValue | MetaRawValue]] = None,
             trailing_comment: Optional[str] = None,
+            indent_by: str = '    ',
     ) -> _Self:
         return cls.from_children(
             leading_comment=BlockComment.from_value(leading_comment) if leading_comment is not None else None,
@@ -257,6 +266,7 @@ class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
             meta=meta_item_internal.from_mapping(meta) if meta is not None else (),
             trailing_comment=BlockComment.from_value(trailing_comment) if trailing_comment is not None else None,
+            indent_by=indent_by,
         )
 
     def auto_claim_comments(self) -> None:

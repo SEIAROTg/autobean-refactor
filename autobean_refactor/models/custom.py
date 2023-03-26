@@ -100,6 +100,7 @@ class Custom(custom.Custom):
             inline_comment: Optional[InlineComment] = None,
             meta: Iterable[MetaItem | BlockComment] = (),
             trailing_comment: Optional[BlockComment] = None,
+            indent_by: str = '    ',
     ) -> _Self:
         return super().from_children(
             date,
@@ -108,7 +109,8 @@ class Custom(custom.Custom):
             leading_comment=leading_comment,
             inline_comment=inline_comment,
             meta=meta,
-            trailing_comment=trailing_comment)
+            trailing_comment=trailing_comment,
+            indent_by=indent_by)
 
     @classmethod
     def from_value(

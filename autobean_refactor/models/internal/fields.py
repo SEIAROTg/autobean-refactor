@@ -9,7 +9,7 @@ _V = TypeVar('_V')
 _M = TypeVar('_M', bound=base.RawModel)
 
 
-class field(base_rw_property[_V, base.RawTreeModel]):
+class data_field(base_rw_property[_V, base.RawTreeModel]):
 
     def __set_name__(self, owner: Type[base.RawTreeModel], name: str) -> None:
         self._attr = name
@@ -19,6 +19,9 @@ class field(base_rw_property[_V, base.RawTreeModel]):
 
     def __set__(self, instance: base.RawTreeModel, value: _V) -> None:
         instance.__dict__[self._attr] = value
+
+
+class field(data_field[_V]):
 
     @abc.abstractmethod
     def clone(
@@ -183,12 +186,10 @@ class repeated_field(field[Repeated[_M]]):
             *,
             separators: tuple[base.RawTokenModel, ...],
             separators_before: Optional[tuple[base.RawTokenModel, ...]] = None,
-            default_indent: Optional[str] = None,
     ) -> None:
         super().__init__()
         self._separators = separators
         self._separators_before = separators_before
-        self._default_indent = default_indent
 
     @property
     def separators(self) -> tuple[base.RawTokenModel, ...]:
@@ -198,16 +199,11 @@ class repeated_field(field[Repeated[_M]]):
     def separators_before(self) -> Optional[tuple[base.RawTokenModel, ...]]:
         return self._separators_before
 
-    @property
-    def default_indent(self) -> Optional[str]:
-        return self._default_indent
-
     def create_repeated(self, values: Iterable[_M]) -> Repeated[_M]:
         return Repeated.from_children(
             values,
             separators=self.separators,
-            separators_before=self.separators_before,
-            indent=self.default_indent)
+            separators_before=self.separators_before)
 
     def clone(
             self,

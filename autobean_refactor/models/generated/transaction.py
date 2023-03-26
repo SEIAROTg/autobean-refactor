@@ -22,6 +22,8 @@ _Self = TypeVar('_Self', bound='Transaction')
 class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'transaction'
 
+    indent_by = internal.data_field[str]()
+
     _date = internal.required_field[Date]()
     _flag = internal.required_field[TransactionFlag]()
     _string0 = internal.optional_left_field[EscapedString](separators=(Whitespace.from_default(),))
@@ -30,8 +32,8 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
     _tags_links = internal.repeated_field[Link | Tag](separators=(Whitespace.from_default(),))
     _inline_comment = internal.optional_left_field[InlineComment](separators=(Whitespace.from_default(),))
     _eol = internal.required_field[Eol]()
-    _meta = internal.repeated_field[MetaItem | BlockComment](separators=(Newline.from_default(),), default_indent='    ')
-    _postings = internal.repeated_field[Posting | BlockComment](separators=(Newline.from_default(),), default_indent='    ')
+    _meta = internal.repeated_field[MetaItem | BlockComment](separators=(Newline.from_default(),))
+    _postings = internal.repeated_field[Posting | BlockComment](separators=(Newline.from_default(),))
     _dedent_mark = internal.optional_left_field[DedentMark](separators=())
 
     @internal.custom_property
@@ -83,7 +85,7 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
     string1 = internal.optional_string_property(raw_string1, EscapedString)
     string2 = internal.optional_string_property(raw_string2, EscapedString)
     inline_comment = internal.optional_string_property(raw_inline_comment, InlineComment)
-    meta = meta_item_internal.repeated_meta_item_property(raw_meta_with_comments)
+    meta = meta_item_internal.repeated_meta_item_property(raw_meta_with_comments, indent_by)
     postings = raw_postings
     trailing_comment = internal.optional_string_property(raw_trailing_comment, BlockComment)
 
@@ -104,6 +106,8 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
             repeated_postings: internal.Repeated[Posting | BlockComment],
             dedent_mark: Optional[DedentMark],
             trailing_comment: Optional[BlockComment],
+            *,
+            indent_by: str = '    ',
     ):
         super().__init__(token_store)
         self._leading_comment = leading_comment
@@ -119,6 +123,7 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
         self._postings = repeated_postings
         self._dedent_mark = dedent_mark
         self._trailing_comment = trailing_comment
+        self.indent_by = indent_by
 
     @property
     def first_token(self) -> base.RawTokenModel:
@@ -144,6 +149,7 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
             type(self)._postings.clone(self._postings, token_store, token_transformer),
             type(self)._dedent_mark.clone(self._dedent_mark, token_store, token_transformer),
             type(self)._trailing_comment.clone(self._trailing_comment, token_store, token_transformer),
+            indent_by=self.indent_by,
         )
 
     def _reattach(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> None:
@@ -178,6 +184,7 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
             and self._postings == other._postings
             and self._dedent_mark == other._dedent_mark
             and self._trailing_comment == other._trailing_comment
+            and self.indent_by == other.indent_by
         )
 
     @classmethod
@@ -195,6 +202,7 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
             inline_comment: Optional[InlineComment] = None,
             meta: Iterable[MetaItem | BlockComment] = (),
             trailing_comment: Optional[BlockComment] = None,
+            indent_by: str = '    ',
     ) -> _Self:
         repeated_tags_links = cls._tags_links.create_repeated(tags_links)
         eol = Eol.from_default()
@@ -231,7 +239,7 @@ class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal
         cls._postings.reattach(repeated_postings, token_store)
         cls._dedent_mark.reattach(dedent_mark, token_store)
         cls._trailing_comment.reattach(trailing_comment, token_store)
-        return cls(token_store, leading_comment, date, flag, string0, string1, string2, repeated_tags_links, inline_comment, eol, repeated_meta, repeated_postings, dedent_mark, trailing_comment)
+        return cls(token_store, leading_comment, date, flag, string0, string1, string2, repeated_tags_links, inline_comment, eol, repeated_meta, repeated_postings, dedent_mark, trailing_comment, indent_by=indent_by)
 
     def auto_claim_comments(self) -> None:
         self.claim_leading_comment(ignore_if_already_claimed=True)

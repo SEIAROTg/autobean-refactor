@@ -4,7 +4,7 @@ import abc
 import itertools
 from typing import Any, Callable, Collection, Generic, Iterable, Iterator, MutableSequence, Optional, Type, TypeGuard, TypeVar, cast, overload
 from .. import base
-from . import indexes, base_property, properties
+from . import fields, indexes, base_property, properties
 
 
 _V = TypeVar('_V')
@@ -152,10 +152,6 @@ class RepeatedValueWrapper(MutableSequence[_V], Generic[_M, _V]):
         self._from_raw_type = from_raw_type
         self._to_raw_type = to_raw_type
         self._update_raw = update_raw
-
-    @property
-    def indent(self) -> Optional[str]:
-        return self._raw_wrapper.indent
 
     def _check_type(self, v: Any) -> TypeGuard[_M]:
         return isinstance(v, self._raw_type)

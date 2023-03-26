@@ -1,13 +1,12 @@
 # pylance: disable
 # type: ignore
 
-import dataclasses
 from typing import Optional, Union
 from .base import BlockCommentable, MetaModel, Floating, field
 
 _META = field(
     separators=('Newline.from_default()',),
-    default_indent=' ' * 4,
+    indented=True,
     is_optional=True,
     is_keyword_only=True,
     default_value={},
@@ -92,7 +91,7 @@ class Posting(MetaModel, BlockCommentable):
         floating=Floating.LEFT, type_alias='PriceAnnotation', is_optional=True, is_keyword_only=True)
     inline_comment: Optional['INLINE_COMMENT'] = field(floating=Floating.LEFT, is_optional=True, is_keyword_only=True)
     _eol: 'EOL' = field(separators=())
-    meta: list['meta_item'] = dataclasses.replace(_META, default_indent=' ' * 8)
+    meta: list['meta_item'] = _META
 
 
 class MetaItem(MetaModel, BlockCommentable):
@@ -311,7 +310,7 @@ class Transaction(MetaModel, BlockCommentable):
     meta: list['meta_item'] = _META
     postings: list['posting'] = field(
         separators=('Newline.from_default()',),
-        default_indent=' ' * 4,
+        indented=True,
         has_interleaving_comments=True)
     _dedent_mark: Optional['DEDENT_MARK'] = field(floating=Floating.LEFT, separators=())
 

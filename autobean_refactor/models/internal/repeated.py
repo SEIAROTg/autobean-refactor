@@ -12,20 +12,14 @@ class Repeated(base.RawTreeModel, Generic[_M]):
             token_store: base.TokenStore,
             items: Iterable[_M],
             placeholder: Placeholder,
-            inferred_indent: Optional[str] = None,
     ) -> None:
         super().__init__(token_store)
         self.items = list(items)
         self._placeholder = placeholder
-        self._inferred_indent = inferred_indent
 
     @property
     def placeholder(self) -> Placeholder:
         return self._placeholder
-
-    @property
-    def inferred_indent(self) -> Optional[str]:
-        return self._inferred_indent
 
     @property
     def first_token(self) -> base.RawTokenModel:
@@ -47,7 +41,6 @@ class Repeated(base.RawTreeModel, Generic[_M]):
             *,
             separators: tuple[base.RawTokenModel, ...],
             separators_before: Optional[tuple[base.RawTokenModel, ...]] = None,
-            indent: Optional[str] = None,
     ) -> _Self:
         placeholder = Placeholder.from_default()
         items = list(items)
@@ -61,14 +54,13 @@ class Repeated(base.RawTreeModel, Generic[_M]):
         token_store = base.TokenStore.from_tokens(tokens)
         for item in items:
             item.reattach(token_store)
-        return cls(token_store, items, placeholder, indent)
+        return cls(token_store, items, placeholder)
 
     def clone(self: _Self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> _Self:
         return type(self)(
             token_store,
             (item.clone(token_store, token_transformer) for item in self.items),
-            self.placeholder.clone(token_store, token_transformer),
-            self._inferred_indent)
+            self.placeholder.clone(token_store, token_transformer))
 
     def _reattach(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> None:
         self._token_store = token_store
