@@ -320,6 +320,7 @@ class TestTagsLinks(base.BaseTestModel):
             assert m.raw_text not in text
         for m in repl:
             assert m.raw_text in text
+        self.check_consistency(document)
 
     @pytest.mark.parametrize(
         'index,repl', _raw_setitem_size_mismatch_cases(),

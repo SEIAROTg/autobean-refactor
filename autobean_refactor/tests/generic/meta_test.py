@@ -1,3 +1,4 @@
+import copy
 import datetime
 import decimal
 import itertools
@@ -490,3 +491,21 @@ class TestMeta(base.BaseTestModel):
     foo: "bar"
     Assets:Foo  100.00 USD
     Assets:Bar -100.00 USD'''
+
+    def test_setitem_consistency(self) -> None:
+        close1 = self.parser.parse('''\
+2012-12-12 close Assets:Foo
+    foo: 123
+    bar: "bar-value"''', models.Close)
+        close2 = self.parser.parse('''\
+2012-12-12 close Assets:Foo
+    foo: 456
+    baz: "baz-value"''', models.Close)
+        # TODO: can we somehow avoid the second `[:]`?
+        close2.raw_meta_with_comments[:] = copy.deepcopy(close1.raw_meta_with_comments[:])
+        self.check_consistency(close2)
+        assert len(close2.raw_meta_with_comments) == 2
+        assert self.print_model(close2) == '''\
+2012-12-12 close Assets:Foo
+    foo: 123
+    bar: "bar-value"'''

@@ -178,6 +178,8 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
             self._insert_tokens(
                 r.start, values, len(self._repeated.items) - len(r), separators_before_last)
             self._repeated.items[indexes.slice_from_range(r)] = values
+            for value in values:
+                value.reattach(self._repeated.token_store)
         else:
             if len(r) != len(values):
                 raise ValueError(f'attempt to assign sequence of size {len(values)} to extended slice of size {len(r)}')
