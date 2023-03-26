@@ -3,7 +3,6 @@
 
 from typing import TYPE_CHECKING, Type, TypeVar, final
 from .. import base, internal
-from ..spacing import Whitespace
 if TYPE_CHECKING:
   from ..number_add_expr import NumberAddExpr
 
@@ -84,9 +83,7 @@ class NumberParenExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
         right_paren = RightParen.from_default()
         tokens = [
             *left_paren.detach(),
-            Whitespace.from_default(),
             *inner_expr.detach(),
-            Whitespace.from_default(),
             *right_paren.detach(),
         ]
         token_store = base.TokenStore.from_tokens(tokens)

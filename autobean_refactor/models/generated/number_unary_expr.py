@@ -3,7 +3,6 @@
 
 from typing import TYPE_CHECKING, Type, TypeVar, final
 from .. import base, internal
-from ..spacing import Whitespace
 if TYPE_CHECKING:
   from ..number_atom_expr import NumberAtomExpr
 
@@ -71,7 +70,6 @@ class NumberUnaryExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
     ) -> _Self:
         tokens = [
             *unary_op.detach(),
-            Whitespace.from_default(),
             *operand.detach(),
         ]
         token_store = base.TokenStore.from_tokens(tokens)

@@ -18,13 +18,13 @@ _META = field(
 
 class NumberUnaryExpr(MetaModel):
     unary_op: 'UNARY_OP' = field(define_as='UnaryOp')
-    operand: 'number_atom_expr' = field(has_circular_dep=True)
+    operand: 'number_atom_expr' = field(has_circular_dep=True, separators=())
 
 
 class NumberParenExpr(MetaModel):
     _left_paren: 'LEFT_PAREN' = field(define_as='LeftParen')
-    inner_expr: 'number_add_expr' = field(has_circular_dep=True)
-    _right_paren: 'RIGHT_PAREN' = field(define_as='RightParen')
+    inner_expr: 'number_add_expr' = field(has_circular_dep=True, separators=())
+    _right_paren: 'RIGHT_PAREN' = field(define_as='RightParen', separators=())
 
 
 class NumberExpr(MetaModel):
