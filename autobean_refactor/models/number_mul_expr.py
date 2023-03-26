@@ -2,6 +2,7 @@ import decimal
 from typing import Any, Optional, Type, TypeVar, cast, final, TYPE_CHECKING
 from . import base
 from . import internal
+from .spacing import Whitespace
 if TYPE_CHECKING:
     from .number_atom_expr import NumberAtomExpr
 else:
@@ -84,3 +85,19 @@ class NumberMulExpr(base.RawTreeModel):
 
     def auto_claim_comments(self) -> None:
         pass  # no block comments
+
+    @classmethod
+    def from_children(cls: Type[_Self], operands: tuple[NumberAtomExpr, ...], ops: tuple[MulOp, ...]) -> _Self:
+        tokens = []
+        for operand, op in zip(operands, ops):
+            tokens.extend(operand.detach())
+            tokens.append(Whitespace.from_default())
+            tokens.extend(op.detach())
+            tokens.append(Whitespace.from_default())
+        tokens.extend(operands[-1].detach())
+        token_store = base.TokenStore.from_tokens(tokens)
+        for operand in operands:
+            operand.reattach(token_store)
+        for op in ops:
+            op.reattach(token_store)
+        return cls(token_store, operands, ops)
