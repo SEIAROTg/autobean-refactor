@@ -31,6 +31,7 @@ class Document(document.Document):
             links: Iterable[str] = (),
             inline_comment: Optional[str] = None,
             meta: Optional[Mapping[str, MetaValue | MetaRawValue]] = None,
+            indent_by: str = '    ',
     ) -> _Self:
         return cls.from_children(
             date=Date.from_value(date),
@@ -38,5 +39,6 @@ class Document(document.Document):
             filename=EscapedString.from_value(filename),
             tags_links=itertools.chain(map(Tag.from_value, tags), map(Link.from_value, links)),
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
-            meta=meta_item_internal.from_mapping(meta) if meta is not None else (),
+            meta=meta_item_internal.from_mapping(meta, indent=indent_by) if meta is not None else (),
+            indent_by=indent_by,
         )

@@ -236,7 +236,7 @@ class Open(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spacin
             currencies=map(Currency.from_value, currencies),
             booking=EscapedString.from_value(booking) if booking is not None else None,
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
-            meta=meta_item_internal.from_mapping(meta) if meta is not None else (),
+            meta=meta_item_internal.from_mapping(meta, indent=indent_by) if meta is not None else (),
             trailing_comment=BlockComment.from_value(trailing_comment) if trailing_comment is not None else None,
             indent_by=indent_by,
         )

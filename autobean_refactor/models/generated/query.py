@@ -217,7 +217,7 @@ class Query(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spaci
             name=EscapedString.from_value(name),
             query_string=EscapedString.from_value(query_string),
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
-            meta=meta_item_internal.from_mapping(meta) if meta is not None else (),
+            meta=meta_item_internal.from_mapping(meta, indent=indent_by) if meta is not None else (),
             trailing_comment=BlockComment.from_value(trailing_comment) if trailing_comment is not None else None,
             indent_by=indent_by,
         )

@@ -121,11 +121,13 @@ class Custom(custom.Custom):
             *,
             inline_comment: Optional[str] = None,
             meta: Optional[Mapping[str, MetaValue | MetaRawValue]] = None,
+            indent_by: str = '    ',
     ) -> _Self:
         return cls.from_children(
             date=Date.from_value(date),
             type=EscapedString.from_value(type),
             values=map(_unsimplify_value, values),
             inline_comment=InlineComment.from_value(inline_comment) if inline_comment is not None else None,
-            meta=meta_item_internal.from_mapping(meta) if meta is not None else (),
+            meta=meta_item_internal.from_mapping(meta, indent=indent_by) if meta is not None else (),
+            indent_by=indent_by,
         )

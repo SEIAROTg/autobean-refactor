@@ -353,7 +353,12 @@ class FieldDescriptor:
     @functools.cached_property
     def construction_from_value(self) -> Optional[str]:
         if self.value_type == 'MetaItem' and self.cardinality == FieldCardinality.REPEATED:
-            return f'meta_item_internal.from_mapping({self.name}) if {self.name} is not None else ()'
+            assert self.indented
+            if self.indent_field_name:
+                indent = 'indent + indent_by'
+            else:
+                indent = 'indent_by'
+            return f'meta_item_internal.from_mapping({self.name}, indent={indent}) if {self.name} is not None else ()'
         if self.value_type == self.inner_type:
             return self.name
         if not self.value_input_type:

@@ -291,6 +291,6 @@ class repeated_meta_item_property(internal.cached_custom_property[RepeatedMetaIt
             ))
 
 
-def from_mapping(mapping: Mapping[str, MetaValue | MetaRawValue]) -> Iterator[MetaItem]:
+def from_mapping(mapping: Mapping[str, MetaValue | MetaRawValue], *, indent: str) -> Iterator[MetaItem]:
     for key, value in mapping.items():
-        yield MetaItem.from_value(key, value)
+        yield MetaItem.from_value(key, value, indent=indent)

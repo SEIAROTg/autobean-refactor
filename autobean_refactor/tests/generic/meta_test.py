@@ -417,6 +417,24 @@ class TestMeta(base.BaseTestModel):
     bar: "bar-value"\
 '''
 
+    def test_from_value_indent(self) -> None:
+        close = models.Posting.from_value(
+            'Assets:Foo',
+            decimal.Decimal(100),
+            'USD',
+            indent='\t\t',
+            indent_by=' ' * 3,
+            meta={
+                'foo': decimal.Decimal(123),
+                'bar': 'bar-value',
+            },
+        )
+        assert self.print_model(close) == '''\
+\t\tAssets:Foo 100 USD
+\t\t   foo: 123
+\t\t   bar: "bar-value"\
+'''
+
     def test_raw_dict_views(self, simple_close: models.Close) -> None:
         keys = simple_close.raw_meta.keys() 
         assert list(keys) == ['foo', 'bar', 'baz']
