@@ -14,6 +14,7 @@ _Self = TypeVar('_Self', bound='Amount')
 @internal.tree_model
 class Amount(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'amount'
+    INLINE = True
 
     _number = internal.required_field[NumberExpr]()
     _currency = internal.required_field[Currency]()

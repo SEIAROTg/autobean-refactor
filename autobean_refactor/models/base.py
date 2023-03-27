@@ -146,6 +146,8 @@ class RawTokenModel(token_store_lib.Token, RawModel):
 
 
 class RawTreeModel(RawModel):
+    INLINE: ClassVar[bool] = False  # True iif this model contains no EOL
+
     def __init__(self, token_store: TokenStore) -> None:
         super().__init__()
         self._token_store = token_store

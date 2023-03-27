@@ -20,6 +20,7 @@ class AtAt(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class TotalPrice(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'total_price'
+    INLINE = True
 
     _label = internal.required_field[AtAt]()
     _number = internal.optional_left_field[NumberExpr](separators=(Whitespace.from_default(),))

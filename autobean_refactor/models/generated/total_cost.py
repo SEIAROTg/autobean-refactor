@@ -25,6 +25,7 @@ class DblRightBrace(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class TotalCost(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'total_cost'
+    INLINE = True
 
     _dbl_left_brace = internal.required_field[DblLeftBrace]()
     _components = internal.repeated_field[CostComponent](separators=(Comma.from_default(), Whitespace.from_default()), separators_before=())

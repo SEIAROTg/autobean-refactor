@@ -25,6 +25,7 @@ class RightBrace(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class UnitCost(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'unit_cost'
+    INLINE = True
 
     _left_brace = internal.required_field[LeftBrace]()
     _components = internal.repeated_field[CostComponent](separators=(Comma.from_default(), Whitespace.from_default()), separators_before=())

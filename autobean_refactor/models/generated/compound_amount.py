@@ -20,6 +20,7 @@ class Hash(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class CompoundAmount(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'compound_amount'
+    INLINE = True
 
     _number_per = internal.optional_right_field[NumberExpr](separators=(Whitespace.from_default(),))
     _hash = internal.required_field[Hash]()

@@ -2,7 +2,7 @@
 # type: ignore
 
 from typing import Optional, Union
-from .base import BlockCommentable, MetaModel, Floating, field
+from .base import BlockCommentable, Inline, MetaModel, Floating, field
 
 _META = field(
     separators=('Newline.from_default()',),
@@ -16,51 +16,51 @@ _META = field(
 # Auxiliary
 
 
-class NumberUnaryExpr(MetaModel):
+class NumberUnaryExpr(MetaModel, Inline):
     unary_op: 'UNARY_OP' = field(define_as='UnaryOp')
     operand: 'number_atom_expr' = field(has_circular_dep=True, separators=())
 
 
-class NumberParenExpr(MetaModel):
+class NumberParenExpr(MetaModel, Inline):
     _left_paren: 'LEFT_PAREN' = field(define_as='LeftParen')
     inner_expr: 'number_add_expr' = field(has_circular_dep=True, separators=())
     _right_paren: 'RIGHT_PAREN' = field(define_as='RightParen', separators=())
 
 
-class NumberExpr(MetaModel):
+class NumberExpr(MetaModel, Inline):
     number_add_expr: 'number_add_expr' = field(has_circular_dep=True)
 
 
-class Amount(MetaModel):
+class Amount(MetaModel, Inline):
     number: 'number_expr'
     currency: 'CURRENCY'
 
 
-class Tolerance(MetaModel):
+class Tolerance(MetaModel, Inline):
     _tilde: 'TILDE' = field(define_as='Tilde')
     number: 'number_expr'
 
 
-class UnitPrice(MetaModel):
+class UnitPrice(MetaModel, Inline):
     _label: 'AT' = field(define_as='At')
     number: Optional['number_expr'] = field(floating=Floating.LEFT)
     currency: Optional['CURRENCY'] = field(floating=Floating.LEFT)
 
 
-class TotalPrice(MetaModel):
+class TotalPrice(MetaModel, Inline):
     _label: 'ATAT' = field(define_as='AtAt')
     number: Optional['number_expr'] = field(floating=Floating.LEFT)
     currency: Optional['CURRENCY'] = field(floating=Floating.LEFT)
 
 
-class CompoundAmount(MetaModel):
+class CompoundAmount(MetaModel, Inline):
     number_per: Optional['number_expr'] = field(floating=Floating.RIGHT)
     _hash: 'HASH' = field(define_as='Hash')
     number_total: Optional['number_expr'] = field(floating=Floating.LEFT)
     currency: 'CURRENCY'
 
 
-class UnitCost(MetaModel):
+class UnitCost(MetaModel, Inline):
     _left_brace: 'LEFT_BRACE' = field(define_as='LeftBrace')
     components: list['cost_component'] = field(
         separators=('Comma.from_default()', 'Whitespace.from_default()'),
@@ -68,7 +68,7 @@ class UnitCost(MetaModel):
     _right_brace: 'RIGHT_BRACE' = field(define_as='RightBrace', separators=())
 
 
-class TotalCost(MetaModel):
+class TotalCost(MetaModel, Inline):
     _dbl_left_brace: 'DBL_LEFT_BRACE' = field(define_as='DblLeftBrace')
     components: list['cost_component'] = field(
         separators=('Comma.from_default()', 'Whitespace.from_default()'),
@@ -76,7 +76,7 @@ class TotalCost(MetaModel):
     _dbl_right_brace: 'DBL_RIGHT_BRACE' = field(define_as='DblRightBrace', separators=())
 
 
-class CostSpec(MetaModel):
+class CostSpec(MetaModel, Inline):
     cost: Union['unit_cost', 'total_cost']
 
 

@@ -393,6 +393,7 @@ class MetaModelDescriptor:
     rule: str
     block_commentable: bool
     has_indented_children: bool
+    inline: bool
     fields: list[FieldDescriptor]
 
     @functools.cached_property
@@ -603,11 +604,13 @@ def build_descriptor(meta_model: Type[base.MetaModel]) -> MetaModelDescriptor:
         ]
     has_indented_children = any(
         descriptor.indented for descriptor in field_descriptors)
+    inline = issubclass(meta_model, base.Inline)
     return MetaModelDescriptor(
         name=meta_model.__name__,
         rule=stringcase.snakecase(meta_model.__name__),
         block_commentable=block_commentable,
         has_indented_children=has_indented_children,
+        inline=inline,
         fields=field_descriptors,
     )
 

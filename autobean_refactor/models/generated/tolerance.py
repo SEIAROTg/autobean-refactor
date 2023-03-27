@@ -19,6 +19,7 @@ class Tilde(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class Tolerance(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'tolerance'
+    INLINE = True
 
     _tilde = internal.required_field[Tilde]()
     _number = internal.required_field[NumberExpr]()

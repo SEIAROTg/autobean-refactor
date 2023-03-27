@@ -17,6 +17,7 @@ class UnaryOp(internal.SimpleRawTokenModel):
 @internal.tree_model
 class NumberUnaryExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'number_unary_expr'
+    INLINE = True
 
     _unary_op = internal.required_field[UnaryOp]()
     _operand = internal.required_field['NumberAtomExpr']()

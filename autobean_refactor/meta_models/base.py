@@ -11,6 +11,10 @@ class BlockCommentable:
     pass
 
 
+class Inline:
+    pass
+
+
 class Floating(enum.Enum):
     LEFT = enum.auto()
     RIGHT = enum.auto()

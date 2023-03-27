@@ -56,6 +56,9 @@ if model.block_commentable:
 @internal.tree_model
 class ${model.name}(${', '.join(base_classes)}):
     RULE = '${model.rule}'
+% if model.inline:
+    INLINE = ${model.inline}
+% endif
 % if model.has_indented_children:
 
     indent_by = internal.data_field[str]()

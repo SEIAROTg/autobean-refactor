@@ -24,6 +24,7 @@ class RightParen(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class NumberParenExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'number_paren_expr'
+    INLINE = True
 
     _left_paren = internal.required_field[LeftParen]()
     _inner_expr = internal.required_field['NumberAddExpr']()

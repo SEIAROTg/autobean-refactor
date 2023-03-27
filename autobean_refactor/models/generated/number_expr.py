@@ -12,6 +12,7 @@ _Self = TypeVar('_Self', bound='NumberExpr')
 @internal.tree_model
 class NumberExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'number_expr'
+    INLINE = True
 
     _number_add_expr = internal.required_field['NumberAddExpr']()
 

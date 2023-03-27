@@ -517,7 +517,7 @@ class TestTransaction(base.BaseTestModel):
             tags=('baz',),
             links=('qux',),
             meta={
-                'aaa1': self.parser.parse_inline('123 + 456', models.NumberExpr),
+                'aaa1': self.parser.parse('123 + 456', models.NumberExpr),
                 'bbb1': 'bbb2',
             },
             postings=postings,

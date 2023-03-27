@@ -20,6 +20,7 @@ class At(internal.SimpleDefaultRawTokenModel):
 @internal.tree_model
 class UnitPrice(base.RawTreeModel, internal.SpacingAccessorsMixin):
     RULE = 'unit_price'
+    INLINE = True
 
     _label = internal.required_field[At]()
     _number = internal.optional_left_field[NumberExpr](separators=(Whitespace.from_default(),))
