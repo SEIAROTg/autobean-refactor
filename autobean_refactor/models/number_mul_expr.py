@@ -1,5 +1,5 @@
 import decimal
-from typing import Any, Optional, Type, TypeVar, cast, final, TYPE_CHECKING
+from typing import Any, Iterator, Optional, Type, TypeVar, cast, final, TYPE_CHECKING
 from . import base
 from . import internal
 from .spacing import Whitespace
@@ -101,3 +101,11 @@ class NumberMulExpr(base.RawTreeModel):
         for op in ops:
             op.reattach(token_store)
         return cls(token_store, operands, ops)
+
+    def iter_children_formatted(self) -> Iterator[tuple[base.RawModel, bool]]:
+        for operand, op in zip(self._raw_operands, self._raw_ops):
+            yield operand, False
+            yield Whitespace.from_default(), False
+            yield op, False
+            yield Whitespace.from_default(), False
+        yield self._raw_operands[-1], False

@@ -2,6 +2,7 @@ import copy
 import inspect
 import io
 import itertools
+import re
 from typing import Any, Iterable, Optional
 import pytest
 from autobean_refactor import parser as parser_lib
@@ -65,6 +66,10 @@ def _check_copy_eq(
             _check_copy_eq(a_item, b_item, expected_token_store, token_index_offset, checked)
     else:
         assert a == b
+
+
+def _remove_spaces(string: str) -> str:
+    return re.sub(r'\s+', '', string)
 
 
 class BaseTestModel:
@@ -135,6 +140,25 @@ class BaseTestModel:
                 for item in prop:
                     if isinstance(item, models.RawTreeModel | models.RawTokenModel):
                         self.check_consistency(item, token_store)
+
+    def check_iter_children_formatted(self, node: models.RawTreeModel) -> None:
+        stream = io.StringIO()
+
+        def format(model: models.RawModel) -> None:
+            if isinstance(model, models.RawTokenModel):
+                stream.write(model.raw_text)
+            else:
+                for child, _ in model.iter_children_formatted():
+                    format(child)
+        
+        backup = copy.deepcopy(node)
+        format(node)
+
+        ret = stream.getvalue()
+
+        assert _remove_spaces(ret) == _remove_spaces(self.print_model(node))
+        assert node == backup
+        self.parser.parse(ret, type(node))
 
     def check_disjoint(self, a: models.RawModel, b: models.RawModel) -> None:
         xs = {id(x) for x in a.tokens}

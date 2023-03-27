@@ -18,6 +18,7 @@ class TestPushtag(base.BaseTestModel):
         assert self.print_model(pushtag) == text
         self.check_deepcopy_tree(pushtag)
         self.check_reattach_tree(pushtag)
+        self.check_iter_children_formatted(pushtag)
 
     @pytest.mark.parametrize(
         'text', [

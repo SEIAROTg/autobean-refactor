@@ -38,6 +38,7 @@ class TestMetaItem(base.BaseTestModel):
         assert self.print_model(meta) == text
         self.check_deepcopy_tree(meta)
         self.check_reattach_tree(meta)
+        self.check_iter_children_formatted(meta)
 
     @pytest.mark.parametrize(
         'text', [

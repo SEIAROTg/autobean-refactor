@@ -68,6 +68,7 @@ class TestPushmeta(base.BaseTestModel):
         assert self.print_model(pushmeta) == text
         self.check_deepcopy_tree(pushmeta)
         self.check_reattach_tree(pushmeta)
+        self.check_iter_children_formatted(pushmeta)
         assert self.print_model(pushmeta) == text
 
     @pytest.mark.parametrize(

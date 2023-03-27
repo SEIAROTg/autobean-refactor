@@ -30,6 +30,7 @@ class TestPad(base.BaseTestModel):
         assert self.print_model(pad) == text
         self.check_deepcopy_tree(pad)
         self.check_reattach_tree(pad)
+        self.check_iter_children_formatted(pad)
 
     @pytest.mark.parametrize(
         'text', [

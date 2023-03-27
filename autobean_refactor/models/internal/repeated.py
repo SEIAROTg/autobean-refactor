@@ -1,5 +1,5 @@
 import copy
-from typing import Generic, Iterable, Optional, Type, TypeVar
+from typing import Generic, Iterable, Iterator, Optional, Type, TypeVar
 from .. import base
 from .placeholder import Placeholder
 
@@ -70,3 +70,7 @@ class Repeated(base.RawTreeModel, Generic[_M]):
     def auto_claim_comments(self) -> None:
         for item in reversed(self.items):
             item.auto_claim_comments()
+
+    def iter_children_formatted(self) -> Iterator[tuple[base.RawModel, bool]]:
+        # should have been handled in repeated_field, who has access to separators
+        raise NotImplementedError()

@@ -30,6 +30,7 @@ class TestEvent(base.BaseTestModel):
         assert self.print_model(event) == text
         self.check_deepcopy_tree(event)
         self.check_reattach_tree(event)
+        self.check_iter_children_formatted(event)
 
     @pytest.mark.parametrize(
         'text', [

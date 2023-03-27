@@ -26,6 +26,7 @@ class TestPlugin(base.BaseTestModel):
         assert self.print_model(plugin) == text
         self.check_deepcopy_tree(plugin)
         self.check_reattach_tree(plugin)
+        self.check_iter_children_formatted(plugin)
 
     @pytest.mark.parametrize(
         'text', [

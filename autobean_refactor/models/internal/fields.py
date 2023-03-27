@@ -74,6 +74,9 @@ class required_field(field[_M]):
     def detach_with_separators(self, value: _M) -> list[base.RawTokenModel]:
         return value.detach()
 
+    def iter_children_formatted(self, value: _M, indented: bool) -> Iterable[tuple[base.RawModel, bool]]:
+        yield value, indented
+
 
 class optional_field(field[Optional[_M]]):
 
@@ -106,6 +109,10 @@ class optional_field(field[Optional[_M]]):
             value.auto_claim_comments()
 
     @abc.abstractmethod
+    def iter_children_formatted(self, value: Optional[_M], indented: bool) -> Iterable[tuple[base.RawModel, bool]]:
+        ...
+
+    @abc.abstractmethod
     def _create_node(
             self,
             token_store: base.TokenStore,
@@ -128,6 +135,12 @@ class optional_left_field(optional_field[_M]):
 
     def detach_with_separators(self, value: Optional[_M]) -> list[base.RawTokenModel]:
         return [*copy.deepcopy(self.separators), *value.detach()] if value is not None else []
+
+    def iter_children_formatted(self, value: Optional[_M], indented: bool) -> Iterable[tuple[base.RawModel, bool]]:
+        if value is not None:
+            for separator in self.separators:
+                yield separator, indented
+            yield value, indented
 
     def _create_node(
             self,
@@ -156,6 +169,12 @@ class optional_right_field(optional_field[_M]):
 
     def detach_with_separators(self, value: Optional[_M]) -> list[base.RawTokenModel]:
         return [*value.detach(), *copy.deepcopy(self.separators)] if value is not None else []
+
+    def iter_children_formatted(self, value: Optional[_M], indented: bool) -> Iterable[tuple[base.RawModel, bool]]:
+        if value is not None:
+            yield value, indented
+            for separator in self.separators:
+                yield separator, indented
 
     def _create_node(
             self,
@@ -226,3 +245,13 @@ class repeated_field(field[Repeated[_M]]):
 
     def detach_with_separators(self, value: Repeated[_M]) -> list[base.RawTokenModel]:
         return value.detach()
+
+    def iter_children_formatted(self, value: Repeated[_M], indented: bool) -> Iterable[tuple[base.RawModel, bool]]:
+        for i, item in enumerate(value.items):
+            if i == 0 and self.separators_before is not None:
+                separators = self.separators_before
+            else:
+                separators = self.separators
+            for separator in separators:
+                yield separator, indented
+            yield item, indented

@@ -30,6 +30,7 @@ class TestQuery(base.BaseTestModel):
         assert self.print_model(query) == text
         self.check_deepcopy_tree(query)
         self.check_reattach_tree(query)
+        self.check_iter_children_formatted(query)
 
     @pytest.mark.parametrize(
         'text', [

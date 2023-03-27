@@ -245,3 +245,15 @@ if model.has_indented_children:
         type(self).${field.field_name}.auto_claim_comments(self.${field.field_name})
 % endif
 % endfor
+
+    def iter_children_formatted(self) -> Iterator[tuple[base.RawModel, bool]]:
+<% skip_space = True %>\
+% for field in model.fields:
+% if not skip_space and field.cardinality == FieldCardinality.REQUIRED:
+% for sep in field.separators:
+        yield ${sep}, False
+% endfor
+% endif
+<% skip_space = field.floating == Floating.RIGHT %>\
+        yield from type(self).${field.field_name}.iter_children_formatted(self.${field.field_name}, ${field.indented})
+% endfor

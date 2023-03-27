@@ -26,6 +26,7 @@ class TestPrice(base.BaseTestModel):
         assert price.amount.raw_currency.value == ref_currency
         self.check_deepcopy_tree(price)
         self.check_reattach_tree(price)
+        self.check_iter_children_formatted(price)
 
     @pytest.mark.parametrize(
         'text', [

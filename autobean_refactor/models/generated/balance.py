@@ -3,7 +3,7 @@
 
 import datetime
 import decimal
-from typing import Iterable, Mapping, Optional, Type, TypeVar, final
+from typing import Iterable, Iterator, Mapping, Optional, Type, TypeVar, final
 from .. import base, internal, meta_item_internal
 from ..account import Account
 from ..block_comment import BlockComment
@@ -269,3 +269,21 @@ class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
         type(self)._account.auto_claim_comments(self._account)
         type(self)._date.auto_claim_comments(self._date)
         type(self)._leading_comment.auto_claim_comments(self._leading_comment)
+
+    def iter_children_formatted(self) -> Iterator[tuple[base.RawModel, bool]]:
+        yield from type(self)._leading_comment.iter_children_formatted(self._leading_comment, False)
+        yield from type(self)._date.iter_children_formatted(self._date, False)
+        yield Whitespace.from_default(), False
+        yield from type(self)._label.iter_children_formatted(self._label, False)
+        yield Whitespace.from_default(), False
+        yield from type(self)._account.iter_children_formatted(self._account, False)
+        yield Whitespace.from_default(), False
+        yield from type(self)._number.iter_children_formatted(self._number, False)
+        yield from type(self)._tolerance.iter_children_formatted(self._tolerance, False)
+        yield Whitespace.from_default(), False
+        yield from type(self)._currency.iter_children_formatted(self._currency, False)
+        yield from type(self)._inline_comment.iter_children_formatted(self._inline_comment, False)
+        yield from type(self)._eol.iter_children_formatted(self._eol, False)
+        yield from type(self)._meta.iter_children_formatted(self._meta, True)
+        yield from type(self)._dedent_mark.iter_children_formatted(self._dedent_mark, False)
+        yield from type(self)._trailing_comment.iter_children_formatted(self._trailing_comment, False)

@@ -23,6 +23,7 @@ class TestDocument(base.BaseTestModel):
         assert document.filename == filename
         self.check_deepcopy_tree(document)
         self.check_reattach_tree(document)
+        self.check_iter_children_formatted(document)
 
     @pytest.mark.parametrize(
         'text', [

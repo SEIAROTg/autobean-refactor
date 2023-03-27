@@ -135,6 +135,7 @@ class TestCostSpec(base.BaseTestModel):
         assert self.print_model(cost_spec) == text
         self.check_deepcopy_tree(cost_spec)
         self.check_reattach_tree(cost_spec)
+        self.check_iter_children_formatted(cost_spec)
 
     @pytest.mark.parametrize(
         'text', [

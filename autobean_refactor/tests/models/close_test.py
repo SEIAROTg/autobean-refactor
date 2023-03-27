@@ -27,6 +27,7 @@ class TestClose(base.BaseTestModel):
         assert self.print_model(close) == text
         self.check_deepcopy_tree(close)
         self.check_reattach_tree(close)
+        self.check_iter_children_formatted(close)
 
     @pytest.mark.parametrize(
         'text', [

@@ -19,6 +19,7 @@ class TestPopmeta(base.BaseTestModel):
         assert self.print_model(popmeta) == text
         self.check_deepcopy_tree(popmeta)
         self.check_reattach_tree(popmeta)
+        self.check_iter_children_formatted(popmeta)
 
     @pytest.mark.parametrize(
         'text', [

@@ -43,6 +43,7 @@ class TestOpen(base.BaseTestModel):
         assert self.print_model(open) == text
         self.check_deepcopy_tree(open)
         self.check_reattach_tree(open)
+        self.check_iter_children_formatted(open)
 
     @pytest.mark.parametrize(
         'text', [

@@ -104,6 +104,7 @@ class TestNumberExpr(base.BaseTestModel):
         assert expr.value == value
         self.check_deepcopy_tree(expr)
         self.check_reattach_tree(expr)
+        self.check_iter_children_formatted(expr)
 
     @pytest.mark.parametrize(
         'text', [

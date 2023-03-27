@@ -55,6 +55,7 @@ class TestCustom(base.BaseTestModel):
         assert self.print_model(custom) == text
         self.check_deepcopy_tree(custom)
         self.check_reattach_tree(custom)
+        self.check_iter_children_formatted(custom)
 
     @pytest.mark.parametrize(
         'text', [

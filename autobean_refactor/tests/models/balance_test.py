@@ -45,6 +45,7 @@ class Testbalance(base.BaseTestModel):
         assert balance.currency == currency
         self.check_deepcopy_tree(balance)
         self.check_reattach_tree(balance)
+        self.check_iter_children_formatted(balance)
         assert self.print_model(balance) == text
 
     @pytest.mark.parametrize(

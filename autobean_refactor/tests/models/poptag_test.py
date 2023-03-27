@@ -18,6 +18,7 @@ class TestPoptag(base.BaseTestModel):
         assert self.print_model(poptag) == text
         self.check_deepcopy_tree(poptag)
         self.check_reattach_tree(poptag)
+        self.check_iter_children_formatted(poptag)
 
     @pytest.mark.parametrize(
         'text', [

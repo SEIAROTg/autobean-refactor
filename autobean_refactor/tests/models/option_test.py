@@ -20,6 +20,7 @@ class TestOption(base.BaseTestModel):
         assert self.print_model(option) == text
         self.check_deepcopy_tree(option)
         self.check_reattach_tree(option)
+        self.check_iter_children_formatted(option)
 
     @pytest.mark.parametrize(
         'text', [

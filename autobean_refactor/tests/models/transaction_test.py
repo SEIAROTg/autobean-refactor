@@ -92,6 +92,7 @@ class TestTransaction(base.BaseTestModel):
         assert self.print_model(transaction) == text
         self.check_deepcopy_tree(transaction)
         self.check_reattach_tree(transaction)
+        self.check_iter_children_formatted(transaction)
 
     def test_parse_success_complex(self) -> None:
         transaction = self.parser.parse(_COMPLEX, models.Transaction)

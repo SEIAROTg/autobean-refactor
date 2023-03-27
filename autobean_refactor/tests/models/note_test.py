@@ -23,6 +23,7 @@ class TestNote(base.BaseTestModel):
         assert note.comment == comment
         self.check_deepcopy_tree(note)
         self.check_reattach_tree(note)
+        self.check_iter_children_formatted(note)
 
     @pytest.mark.parametrize(
         'text', [

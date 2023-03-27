@@ -405,7 +405,7 @@ class MetaModelDescriptor:
     @functools.cached_property
     def imports(self) -> dict[Optional[str], set[str]]:
         ret = collections.defaultdict[Optional[str], set[str]](set)
-        ret['typing'].update(('TypeVar', 'Type', 'final'))
+        ret['typing'].update(('Iterator', 'TypeVar', 'Type', 'final'))
         if self.type_check_only_imports:
             ret['typing'].add('TYPE_CHECKING')
         ret['..'].update(('base', 'internal'))

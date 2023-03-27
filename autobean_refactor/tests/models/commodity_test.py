@@ -27,6 +27,7 @@ class TestCommodity(base.BaseTestModel):
         assert self.print_model(commodity) == text
         self.check_deepcopy_tree(commodity)
         self.check_reattach_tree(commodity)
+        self.check_iter_children_formatted(commodity)
 
     @pytest.mark.parametrize(
         'text', [

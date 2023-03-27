@@ -23,6 +23,7 @@ class TestAmount(base.BaseTestModel):
         assert self.print_model(amount) == text
         self.check_deepcopy_tree(amount)
         self.check_reattach_tree(amount)
+        self.check_iter_children_formatted(amount)
 
     @pytest.mark.parametrize(
         'text', [

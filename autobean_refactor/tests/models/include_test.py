@@ -18,6 +18,7 @@ class TestInclude(base.BaseTestModel):
         assert self.print_model(include) == text
         self.check_deepcopy_tree(include)
         self.check_reattach_tree(include)
+        self.check_iter_children_formatted(include)
 
     @pytest.mark.parametrize(
         'text', [

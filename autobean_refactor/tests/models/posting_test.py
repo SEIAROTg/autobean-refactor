@@ -68,6 +68,7 @@ class TestPosting(base.BaseTestModel):
         assert self.print_model(posting) == text
         self.check_deepcopy_tree(posting)
         self.check_reattach_tree(posting)
+        self.check_iter_children_formatted(posting)
 
     @pytest.mark.parametrize(
         'text', [

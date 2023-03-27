@@ -202,6 +202,7 @@ class TestTagsLinks(base.BaseTestModel):
         assert self.print_model(document) == text
         self.check_deepcopy_tree(document)
         self.check_reattach_tree(document)
+        self.check_iter_children_formatted(document)
 
     @pytest.mark.parametrize(
         'text', [

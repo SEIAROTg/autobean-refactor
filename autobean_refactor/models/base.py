@@ -1,6 +1,6 @@
 import abc
 import copy
-from typing import Any, ClassVar, Optional, Type, TypeVar, cast
+from typing import Any, ClassVar, Iterator, Optional, Protocol, Type, TypeVar, cast
 from autobean_refactor import token_store as token_store_lib
 
 _T = TypeVar('_T', bound='RawTokenModel')
@@ -33,6 +33,11 @@ class IdentityTokenTransformer(TokenTransformer):
 
 
 IDENTITY_TOKEN_TRANSFORMER = IdentityTokenTransformer()
+
+
+class Formatter(Protocol):
+    def __call__(self, model: 'RawModel', *, indent: int) -> None:
+        pass
 
 
 class RawModel(abc.ABC):
@@ -88,6 +93,10 @@ class RawModel(abc.ABC):
         ...
 
     @abc.abstractmethod
+    def iter_children_formatted(self) -> Iterator[tuple['RawModel', bool]]:
+        ...
+
+    @abc.abstractmethod
     def auto_claim_comments(self) -> None:
         ...
 
@@ -137,6 +146,9 @@ class RawTokenModel(token_store_lib.Token, RawModel):
 
     def reattach(self: _SelfRawTokenModel, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> _SelfRawTokenModel:
         return token_transformer.transform(self)
+
+    def iter_children_formatted(self) -> Iterator[tuple['RawModel', bool]]:
+        yield from ()
 
     def auto_claim_comments(self) -> None:
         pass
