@@ -93,7 +93,8 @@ def _get_include_paths(path: str, file: models.File) -> Iterable[str]:
         if not matches:
             lineno = directive.token_store.get_position(directive.first_token).line
             raise ValueError(f'No files match {directive.filename!r} ({path}:{lineno})')
-        yield from matches
+        for match in matches:
+            yield os.path.normpath(match)
 
 
 class Parser:

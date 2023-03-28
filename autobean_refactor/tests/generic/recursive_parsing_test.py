@@ -27,6 +27,7 @@ include "**/*.bean"
 ''',
     '2021/03/01.bean': '''\
 2021-03-01 *
+include "../index.bean"
 ''',
 }
 
