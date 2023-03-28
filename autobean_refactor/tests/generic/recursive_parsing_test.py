@@ -50,7 +50,7 @@ class TestRecursiveParsing(base.BaseTestModel):
                 # '2020/03/01.bean': 1,  # '*' doesn't match children directories
                 '2021/index.bean': 2,
                 '2021/02.bean': 1,
-                '2021/03/01.bean': 1,
+                '2021/03/01.bean': 2,
             }
             actual_paths = {
                 path: len(file.raw_directives)
