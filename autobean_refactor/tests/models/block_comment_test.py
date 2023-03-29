@@ -11,7 +11,10 @@ _PARSE_TESTCASES = [
     (';foo\n;bar', '', 'foo\nbar'),
     (';foo\r\n;bar', '', 'foo\r\nbar'),
     ('\t; foo', '\t', 'foo'),
-    ('\t; foo\n  ;bar', '\t', 'foo\nbar'),
+    ('\t; foo\n  ;bar', '\t', ' foo\nbar'),
+    ('  ; foo\n  ; bar', '  ', 'foo\nbar'),
+    ('  ; foo\n  ;    bar', '  ', 'foo\n   bar'),
+    ('; a\n;\n;\n; b', '', 'a\n\n\nb'),
 ]
 _FORMAT_TESTCASES = [
     ('; foo', '', 'foo'),
@@ -20,6 +23,9 @@ _FORMAT_TESTCASES = [
     ('  ; foo', '  ', 'foo'),
     ('  ; foo\n  ; bar', '  ', 'foo\nbar'),
     ('\t; foo\r\n\t; bar', '\t', 'foo\r\nbar'),
+    ('  ; foo\n  ;    bar', '  ', 'foo\n   bar'),
+    ('; a\n;\n;\n; b', '', 'a\n\n\nb'),
+    ('; a\n;\n;\n;', '', 'a\n\n\n'),
 ]
 
 

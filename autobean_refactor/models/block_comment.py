@@ -1,12 +1,17 @@
-import re
 from typing import Type, TypeVar, final
 from . import base
 from .internal import registry as _registry
 from .internal import spacing_accessors as _spacing_accessors
 from .internal import value_properties as _value_properties
 
-_INDENT_SPLIT_RE = re.compile(r';\s*')
 _Self = TypeVar('_Self', bound='BlockComment')
+
+
+def _splitlines(s: str) -> list[str]:
+    lines = s.splitlines(keepends=True)
+    if not lines or lines[-1].endswith('\n'):
+        lines.append('')
+    return lines
 
 
 @_registry.token_model
@@ -67,16 +72,21 @@ class BlockComment(base.RawTokenModel, _value_properties.RWValueWithIndent[str],
     @classmethod
     def _parse_value(cls, raw_text: str) -> tuple[str, str]:
         indents, values = zip(*(
-            tuple(_INDENT_SPLIT_RE.split(line, maxsplit=1))
-            for line in raw_text.splitlines(keepends=True)
+            tuple(line.split(';', maxsplit=1))
+            for line in _splitlines(raw_text)
         ))
-        return indents[0], ''.join(values)
+        lines = list(values)
+        spaced = all(not line.rstrip('\r\n') or line.startswith(' ') for line in lines)
+        if spaced:
+            lines = [line.removeprefix(' ') for line in lines]
+
+        return indents[0], ''.join(lines)
 
     @classmethod
     def _format_value(cls, indent: str, value: str) -> str:
         return ''.join(
-            f'{indent}; {line}' if line else f'{indent};'
-            for line in value.splitlines(keepends=True) or ['']
+            f'{indent}; {line}' if line.rstrip('\r\n') else f'{indent};{line}'
+            for line in _splitlines(value)
         )
 
     def _clone(self: 'BlockComment') -> 'BlockComment':
