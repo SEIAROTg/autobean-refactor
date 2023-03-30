@@ -1,7 +1,7 @@
 import copy
 import datetime
 import decimal
-from typing import MutableSequence, Optional, Type, TypeVar
+from typing import MutableSequence, Optional, Self, Type
 from .generated import cost_spec
 from .cost_component import CostComponent
 from . import internal
@@ -13,8 +13,6 @@ from .number_expr import NumberExpr
 from .amount import Amount
 from .compound_amount import CompoundAmount
 from .cost import UnitCost, TotalCost
-
-_Self = TypeVar('_Self', bound='CostSpec')
 
 
 @internal.tree_model
@@ -184,14 +182,14 @@ class CostSpec(cost_spec.CostSpec):
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
             number_per: Optional[decimal.Decimal],
             number_total: Optional[decimal.Decimal],
             currency: Optional[str],
             date: Optional[datetime.date] = None,
             label: Optional[str] = None,
             merge: bool = False,
-    ) -> _Self:
+    ) -> Self:
         type_: Type[UnitCost | TotalCost]
         comps: list[CostComponent] = []
         if number_per is not None and number_total is not None:  # CompoundAmount

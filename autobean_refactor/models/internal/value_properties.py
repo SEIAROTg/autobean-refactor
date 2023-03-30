@@ -2,9 +2,9 @@ import datetime
 import decimal
 import abc
 import itertools
-from typing import Any, Callable, Collection, Generic, Iterable, Iterator, MutableSequence, Optional, Type, TypeGuard, TypeVar, cast, overload
+from typing import Any, Callable, Collection, Generic, Iterable, Iterator, MutableSequence, Optional, Self, Type, TypeGuard, TypeVar, cast, overload
 from .. import base
-from . import fields, indexes, base_property, properties
+from . import indexes, base_property, properties
 
 
 _V = TypeVar('_V')
@@ -15,8 +15,6 @@ _SV = TypeVar('_SV', bound='RWValue[str]')
 _ISV = TypeVar('_ISV', bound='RWValueWithIndent[str]')
 _DV = TypeVar('_DV', bound='RWValue[decimal.Decimal]')
 _DateV = TypeVar('_DateV', bound='RWValue[datetime.date]')
-_SelfRWValue = TypeVar('_SelfRWValue', bound='RWValue')
-_SelfRWValueWithIndent = TypeVar('_SelfRWValueWithIndent', bound='RWValueWithIndent')
 
 
 class RWValue(base.RawModel, abc.ABC, Generic[_V]):
@@ -30,7 +28,7 @@ class RWValue(base.RawModel, abc.ABC, Generic[_V]):
 
     @classmethod
     @abc.abstractmethod
-    def from_value(cls: Type[_SelfRWValue], value: _V) -> _SelfRWValue:
+    def from_value(cls, value: _V) -> Self:
         raise NotImplementedError()
 
 
@@ -45,7 +43,7 @@ class RWValueWithIndent(RWValue[_V]):
 
     @classmethod
     @abc.abstractmethod
-    def from_value(cls: Type[_SelfRWValueWithIndent], value: _V, *, indent: str = '') -> _SelfRWValueWithIndent:
+    def from_value(cls, value: _V, *, indent: str = '') -> Self:
         raise NotImplementedError()
 
 

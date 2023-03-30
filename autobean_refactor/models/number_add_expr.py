@@ -1,5 +1,5 @@
 import decimal
-from typing import Any, Iterator, Optional, Type, TypeVar, cast, final, TYPE_CHECKING
+from typing import Any, Iterator, Optional, Self, cast, final, TYPE_CHECKING
 from . import base
 from . import internal
 from .spacing import Whitespace
@@ -7,9 +7,6 @@ if TYPE_CHECKING:
     from .number_mul_expr import NumberMulExpr
 else:
     NumberMulExpr = Any
-
-# TODO: replace with PEP 673 Self once supported
-_Self = TypeVar('_Self', bound='NumberAddExpr')
 
 
 @internal.token_model
@@ -33,7 +30,7 @@ class NumberAddExpr(base.RawTreeModel):
         self._raw_ops = ops
 
     @classmethod
-    def from_parsed_children(cls: Type[_Self], token_store: base.TokenStore, *children: Optional[base.RawModel]) -> _Self:
+    def from_parsed_children(cls, token_store: base.TokenStore, *children: Optional[base.RawModel]) -> Self:
         return cls(
             token_store,
             cast(tuple[NumberMulExpr, ...], children[::2]),
@@ -67,7 +64,7 @@ class NumberAddExpr(base.RawTreeModel):
                 assert False
         return value
 
-    def clone(self: _Self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> _Self:
+    def clone(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> Self:
         ops = tuple(op.clone(token_store, token_transformer) for op in self._raw_ops)
         operands = tuple(operand.clone(token_store, token_transformer) for operand in self._raw_operands)
         return type(self)(token_store, operands, ops)
@@ -87,7 +84,7 @@ class NumberAddExpr(base.RawTreeModel):
         pass  # no block comments
 
     @classmethod
-    def from_children(cls: Type[_Self], operands: tuple[NumberMulExpr, ...], ops: tuple[AddOp, ...]) -> _Self:
+    def from_children(cls, operands: tuple[NumberMulExpr, ...], ops: tuple[AddOp, ...]) -> Self:
         tokens = []
         for operand, op in zip(operands, ops):
             tokens.extend(operand.detach())

@@ -1,6 +1,6 @@
 import datetime
 import decimal
-from typing import Iterable, Iterator, Mapping, NoReturn, Optional, Type, TypeVar, Union, cast, get_args
+from typing import Iterable, Iterator, Mapping, Optional, Self, Union, get_args
 
 from . import internal, meta_item_internal
 from .generated import custom
@@ -20,7 +20,6 @@ from .meta_value import MetaRawValue, MetaValue
 _ValueTypeSimplified = str | datetime.date | bool | decimal.Decimal
 _ValueTypePreserved = Account | Amount
 CustomValue = Union[_ValueTypeSimplified, _ValueTypePreserved]
-_Self = TypeVar('_Self', bound='Custom')
 
 
 def _simplify_value(raw_value: CustomRawValue) -> CustomValue:
@@ -91,7 +90,7 @@ class Custom(custom.Custom):
 
     @classmethod
     def from_children(
-            cls: Type[_Self],
+            cls,
             date: Date,
             type: EscapedString,
             values: Iterable[CustomRawValue],
@@ -101,7 +100,7 @@ class Custom(custom.Custom):
             meta: Iterable[MetaItem | BlockComment] = (),
             trailing_comment: Optional[BlockComment] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         return super().from_children(
             date,
             type,
@@ -114,7 +113,7 @@ class Custom(custom.Custom):
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
             date: datetime.date,
             type: str,
             values: Iterable[CustomValue | CustomRawValue],
@@ -124,7 +123,7 @@ class Custom(custom.Custom):
             meta: Optional[Mapping[str, MetaValue | MetaRawValue]] = None,
             trailing_comment: Optional[str] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         return cls.from_children(
             leading_comment=BlockComment.from_value(leading_comment) if leading_comment is not None else None,
             date=Date.from_value(date),

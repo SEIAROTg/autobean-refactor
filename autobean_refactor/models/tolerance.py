@@ -1,10 +1,8 @@
 import decimal
-from typing import Type, TypeVar
+from typing import Self
 from . import internal
 from .generated import tolerance
 from .generated.tolerance import Tilde
-
-_Self = TypeVar('_Self', bound='Tolerance')
 
 
 @internal.tree_model
@@ -20,7 +18,7 @@ class Tolerance(tolerance.Tolerance, internal.RWValue[decimal.Decimal]):
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
             number: decimal.Decimal,
-    ) -> _Self:
+    ) -> Self:
         return super().from_value(number)

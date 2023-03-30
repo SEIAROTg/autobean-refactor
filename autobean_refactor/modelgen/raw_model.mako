@@ -24,13 +24,14 @@ import ${module}
   from ${module} import ${', '.join(sorted(imports))}
 % endfor
 % endif
+% if any(field.type_alias is not None and field.type_alias != field.inner_type_original for field in model.fields):
 
 % for field in model.fields:
 % if field.type_alias is not None and field.type_alias != field.inner_type_original:
 ${field.type_alias} = ${field.inner_type_original}
 % endif
 % endfor
-_Self = TypeVar('_Self', bound='${model.name}')
+% endif
 % for field in model.fields:
 % if field.define_as:
 
@@ -123,7 +124,7 @@ class ${model.name}(${', '.join(base_classes)}):
     def last_token(self) -> base.RawTokenModel:
         return ${model.pivot_token(None, Floating.LEFT)}
 
-    def clone(self: _Self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> _Self:
+    def clone(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> Self:
         return type(self)(
             token_store,
 % for field in model.fields:
@@ -153,7 +154,7 @@ class ${model.name}(${', '.join(base_classes)}):
 
     @classmethod
     def from_children(
-            cls: Type[_Self],
+            cls,
 % for field in model.ctor_positional_fields:
             ${field.name}: ${field.input_type}${field.from_children_default},
 % endfor
@@ -166,7 +167,7 @@ class ${model.name}(${', '.join(base_classes)}):
             indent_by: str = '    ',
 % endif
 % endif
-    ) -> _Self:
+    ) -> Self:
 % for field in model.fields:
 % if not field.is_public and field.cardinality == FieldCardinality.REQUIRED:
         ${field.name} = ${field.inner_type}.from_default()
@@ -208,7 +209,7 @@ if model.has_indented_children:
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
 % for field in model.ctor_positional_fields:
             ${field.name}: ${field.value_input_type}${field.from_value_default},
 % endfor
@@ -221,7 +222,7 @@ if model.has_indented_children:
             indent_by: str = '    ',
 % endif
 % endif
-    ) -> _Self:
+    ) -> Self:
         return cls.from_children(
 % for field in model.public_fields:
             ${field.name}=${field.construction_from_value},

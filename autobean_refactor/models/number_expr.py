@@ -45,7 +45,6 @@ def _add_expr_from_value(value: decimal.Decimal) -> NumberAddExpr:
     return NumberAddExpr(token_store, (mul_expr,), ())
 
 
-
 def _operand_type_check(
         op: Callable[['NumberExpr', 'NumberExpr'], 'NumberExpr'],
 ) -> Callable[['NumberExpr', object], 'NumberExpr']:

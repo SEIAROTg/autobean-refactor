@@ -1,6 +1,6 @@
 import datetime
 import itertools
-from typing import Iterable, Mapping, Optional, Type, TypeVar
+from typing import Iterable, Mapping, Optional, Self
 from . import base, internal, meta_item_internal
 from .block_comment import BlockComment
 from .date import Date
@@ -14,14 +14,12 @@ from .tag import Tag
 from .transaction_flag import TransactionFlag
 from .generated import transaction
 
-_Self = TypeVar('_Self', bound='Transaction')
-
 
 @internal.tree_model
 class Transaction(transaction.Transaction):
 
     @classmethod
-    def from_parsed_children(cls: Type[_Self], token_store: base.TokenStore, *children: Optional[base.RawModel]) -> _Self:
+    def from_parsed_children(cls, token_store: base.TokenStore, *children: Optional[base.RawModel]) -> Self:
         (
             leading_comment,
             date,
@@ -70,7 +68,7 @@ class Transaction(transaction.Transaction):
 
     @classmethod
     def from_children(  # type: ignore[override]
-            cls: Type[_Self],
+            cls,
             date: Date,
             flag: TransactionFlag,
             payee: Optional[EscapedString],
@@ -83,7 +81,7 @@ class Transaction(transaction.Transaction):
             meta: Iterable[MetaItem | BlockComment] = (),
             trailing_comment: Optional[BlockComment] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         if payee is not None and narration is None:
             narration = EscapedString.from_value('')
         return super().from_children(
@@ -103,7 +101,7 @@ class Transaction(transaction.Transaction):
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
             date: datetime.date,
             payee: Optional[str],
             narration: Optional[str],
@@ -117,7 +115,7 @@ class Transaction(transaction.Transaction):
             meta: Optional[Mapping[str, MetaRawValue | MetaValue]] = None,
             trailing_comment: Optional[str] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         return cls.from_children(
             leading_comment=BlockComment.from_value(leading_comment) if leading_comment is not None else None,
             date=Date.from_value(date),

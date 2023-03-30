@@ -1,13 +1,9 @@
 import abc
 import copy
-from typing import Any, ClassVar, Iterator, Optional, Protocol, Type, TypeVar, cast
+from typing import Any, ClassVar, Iterator, Optional, Protocol, Self, Type, TypeVar, cast
 from autobean_refactor import token_store as token_store_lib
 
 _T = TypeVar('_T', bound='RawTokenModel')
-# TODO: replace with PEP 673 Self once supported
-_SelfRawModel = TypeVar('_SelfRawModel', bound='RawModel')
-_SelfRawTokenModel = TypeVar('_SelfRawTokenModel', bound='RawTokenModel')  
-_SelfRawTreeModel = TypeVar('_SelfRawTreeModel', bound='RawTreeModel')
 TokenStore = token_store_lib.TokenStore['RawTokenModel']
 
 
@@ -59,7 +55,7 @@ class RawModel(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def __deepcopy__(self: _SelfRawModel, memo: dict[int, Any]) -> _SelfRawModel:
+    def __deepcopy__(self, memo: dict[int, Any]) -> Self:
         ...
 
     def detach(self) -> list['RawTokenModel']:
@@ -85,11 +81,11 @@ class RawModel(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def clone(self: _SelfRawModel, token_store: TokenStore, token_transformer: TokenTransformer) -> _SelfRawModel:
+    def clone(self, token_store: TokenStore, token_transformer: TokenTransformer) -> Self:
         ...
 
     @abc.abstractmethod
-    def reattach(self: _SelfRawModel, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> _SelfRawModel:
+    def reattach(self, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> Self:
         ...
 
     @abc.abstractmethod
@@ -106,7 +102,7 @@ class RawTokenModel(token_store_lib.Token, RawModel):
         super().__init__(raw_text)
 
     @classmethod
-    def from_raw_text(cls: Type[_SelfRawTokenModel], raw_text: str) -> _SelfRawTokenModel:
+    def from_raw_text(cls, raw_text: str) -> Self:
         return cls(raw_text)
 
     @property
@@ -122,10 +118,10 @@ class RawTokenModel(token_store_lib.Token, RawModel):
         return self
 
     @abc.abstractmethod
-    def _clone(self: _SelfRawTokenModel) -> _SelfRawTokenModel:
+    def _clone(self) -> Self:
         ...
 
-    def __deepcopy__(self: _SelfRawTokenModel, memo: dict[int, Any]) -> _SelfRawTokenModel:
+    def __deepcopy__(self, memo: dict[int, Any]) -> Self:
         del memo  # unused
         return self._clone()
 
@@ -141,10 +137,10 @@ class RawTokenModel(token_store_lib.Token, RawModel):
     def __eq__(self, other: object) -> bool:
         return isinstance(other, RawTokenModel) and self.RULE == other.RULE and self.raw_text == other.raw_text
 
-    def clone(self: _SelfRawTokenModel, token_store: TokenStore, token_transformer: TokenTransformer) -> _SelfRawTokenModel:
+    def clone(self, token_store: TokenStore, token_transformer: TokenTransformer) -> Self:
         return token_transformer.transform(self)
 
-    def reattach(self: _SelfRawTokenModel, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> _SelfRawTokenModel:
+    def reattach(self, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> Self:
         return token_transformer.transform(self)
 
     def iter_children_formatted(self) -> Iterator[tuple['RawModel', bool]]:
@@ -165,14 +161,14 @@ class RawTreeModel(RawModel):
         self._token_store = token_store
 
     @classmethod
-    def from_parsed_children(cls: Type[_SelfRawTreeModel], token_store: TokenStore, *children: Optional[RawModel]) -> _SelfRawTreeModel:
+    def from_parsed_children(cls, token_store: TokenStore, *children: Optional[RawModel]) -> Self:
         return cls(token_store, *children)
 
     @property
     def token_store(self) -> TokenStore:
         return self._token_store
 
-    def __deepcopy__(self: _SelfRawTreeModel, memo: dict[int, Any]) -> _SelfRawTreeModel:
+    def __deepcopy__(self, memo: dict[int, Any]) -> Self:
         del memo  # unused
         tokens: list[RawTokenModel] = []
         token_map: dict[int, RawTokenModel] = {}
@@ -190,7 +186,7 @@ class RawTreeModel(RawModel):
     def _eq(self, other: 'RawTreeModel') -> bool:
         ...
 
-    def reattach(self: _SelfRawTreeModel, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> _SelfRawTreeModel:
+    def reattach(self, token_store: TokenStore, token_transformer: TokenTransformer = IDENTITY_TOKEN_TRANSFORMER) -> Self:
         self._reattach(token_store, token_transformer)
         return self
 

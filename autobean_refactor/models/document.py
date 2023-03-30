@@ -1,6 +1,6 @@
 import datetime
 import itertools
-from typing import Iterable, Mapping, Optional, Type, TypeVar
+from typing import Iterable, Mapping, Optional, Self
 from . import internal, meta_item_internal
 from .date import Date
 from .account import Account
@@ -13,8 +13,6 @@ from .generated import document
 from .generated.document import DocumentLabel
 from .meta_value import MetaRawValue, MetaValue
 
-_Self = TypeVar('_Self', bound='Document')
-
 
 @internal.tree_model
 class Document(document.Document):
@@ -23,7 +21,7 @@ class Document(document.Document):
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
             date: datetime.date,
             account: str,
             filename: str,
@@ -35,7 +33,7 @@ class Document(document.Document):
             meta: Optional[Mapping[str, MetaValue | MetaRawValue]] = None,
             trailing_comment: Optional[str] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         return cls.from_children(
             date=Date.from_value(date),
             account=Account.from_value(account),

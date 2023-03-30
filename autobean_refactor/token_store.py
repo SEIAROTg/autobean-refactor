@@ -1,9 +1,8 @@
 import bisect
 import dataclasses
-from typing import Any, Collection, Generic, Iterable, Iterator, Optional, Type, TypeVar
+from typing import Any, Collection, Generic, Iterable, Iterator, Optional, Self, TypeVar
 
 _T = TypeVar('_T', bound='Token')
-_Self = TypeVar('_Self', bound='TokenStore')
 
 
 @dataclasses.dataclass(frozen=True)
@@ -81,7 +80,7 @@ class TokenStore(Generic[_T]):
         self._end = Position(0, 0, 0)
 
     @classmethod
-    def from_tokens(cls: Type[_Self], tokens: Iterable[_T]) -> _Self:
+    def from_tokens(cls, tokens: Iterable[_T]) -> Self:
         for token in tokens:
             if token.store_handle:
                 raise ValueError('Token already in a store.')

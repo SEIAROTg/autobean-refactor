@@ -1,10 +1,8 @@
-from typing import Type, TypeVar, final
+from typing import Self, final
 from . import base
 from .internal import registry as _registry
 from .internal import spacing_accessors as _spacing_accessors
 from .internal import value_properties as _value_properties
-
-_Self = TypeVar('_Self', bound='BlockComment')
 
 
 def _splitlines(s: str) -> list[str]:
@@ -61,11 +59,11 @@ class BlockComment(base.RawTokenModel, _value_properties.RWValueWithIndent[str],
         self._claimed = claimed
 
     @classmethod
-    def from_value(cls: Type[_Self], value: str, *, indent: str = '') -> _Self:
+    def from_value(cls, value: str, *, indent: str = '') -> Self:
         return cls(cls._format_value(indent, value), indent, value)
 
     @classmethod
-    def from_raw_text(cls: Type[_Self], raw_text: str) -> _Self:
+    def from_raw_text(cls, raw_text: str) -> Self:
         indent, value = cls._parse_value(raw_text)
         return cls(raw_text, indent, value)
 

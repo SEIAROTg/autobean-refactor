@@ -1,10 +1,9 @@
 import copy
-from typing import Generic, Iterable, Iterator, Optional, Type, TypeVar
+from typing import Generic, Iterable, Iterator, Optional, Self, TypeVar
 from .. import base
 from .placeholder import Placeholder
 
 _M = TypeVar('_M', bound=base.RawModel)
-_Self = TypeVar('_Self', bound='Repeated')
 
 class Repeated(base.RawTreeModel, Generic[_M]):
     def __init__(
@@ -36,12 +35,12 @@ class Repeated(base.RawTreeModel, Generic[_M]):
 
     @classmethod
     def from_children(
-            cls: Type[_Self],
+            cls,
             items: Iterable[_M],
             *,
             separators: tuple[base.RawTokenModel, ...],
             separators_before: Optional[tuple[base.RawTokenModel, ...]] = None,
-    ) -> _Self:
+    ) -> Self:
         placeholder = Placeholder.from_default()
         items = list(items)
         tokens: list[base.RawTokenModel] = [placeholder]
@@ -56,7 +55,7 @@ class Repeated(base.RawTreeModel, Generic[_M]):
             item.reattach(token_store)
         return cls(token_store, items, placeholder)
 
-    def clone(self: _Self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> _Self:
+    def clone(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> Self:
         return type(self)(
             token_store,
             (item.clone(token_store, token_transformer) for item in self.items),

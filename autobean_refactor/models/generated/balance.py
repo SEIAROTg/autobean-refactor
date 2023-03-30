@@ -3,7 +3,7 @@
 
 import datetime
 import decimal
-from typing import Iterable, Iterator, Mapping, Optional, Type, TypeVar, final
+from typing import Iterable, Iterator, Mapping, Optional, Self, final
 from .. import base, internal, meta_item_internal
 from ..account import Account
 from ..block_comment import BlockComment
@@ -16,8 +16,6 @@ from ..number_expr import NumberExpr
 from ..punctuation import DedentMark, Eol
 from ..spacing import Newline, Whitespace
 from ..tolerance import Tolerance
-
-_Self = TypeVar('_Self', bound='Balance')
 
 
 @internal.token_model
@@ -126,7 +124,7 @@ class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
     def last_token(self) -> base.RawTokenModel:
         return (self._trailing_comment and self._trailing_comment.last_token) or (self._dedent_mark and self._dedent_mark.last_token) or self._meta.last_token or self._eol.last_token
 
-    def clone(self: _Self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> _Self:
+    def clone(self, token_store: base.TokenStore, token_transformer: base.TokenTransformer) -> Self:
         return type(self)(
             token_store,
             type(self)._leading_comment.clone(self._leading_comment, token_store, token_transformer),
@@ -179,7 +177,7 @@ class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
 
     @classmethod
     def from_children(
-            cls: Type[_Self],
+            cls,
             date: Date,
             account: Account,
             number: NumberExpr,
@@ -191,7 +189,7 @@ class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             meta: Iterable[MetaItem | BlockComment] = (),
             trailing_comment: Optional[BlockComment] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         label = BalanceLabel.from_default()
         eol = Eol.from_default()
         repeated_meta = cls._meta.create_repeated(meta)
@@ -231,7 +229,7 @@ class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
 
     @classmethod
     def from_value(
-            cls: Type[_Self],
+            cls,
             date: datetime.date,
             account: str,
             number: decimal.Decimal,
@@ -243,7 +241,7 @@ class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.Spa
             meta: Optional[Mapping[str, MetaValue | MetaRawValue]] = None,
             trailing_comment: Optional[str] = None,
             indent_by: str = '    ',
-    ) -> _Self:
+    ) -> Self:
         return cls.from_children(
             leading_comment=BlockComment.from_value(leading_comment) if leading_comment is not None else None,
             date=Date.from_value(date),

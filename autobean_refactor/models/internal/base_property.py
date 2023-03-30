@@ -1,11 +1,10 @@
 import abc
-from typing import Generic, Optional, Type, TypeVar, overload
+from typing import Generic, Optional, Self, Type, TypeVar, overload
 from .. import base
 
 _U = TypeVar('_U', bound=base.RawTreeModel)
 _V = TypeVar('_V')
 _V_cov = TypeVar('_V_cov', covariant=True)
-_Self = TypeVar('_Self', bound='base_ro_property')
 
 
 class base_ro_property(Generic[_V_cov, _U], abc.ABC):
@@ -19,10 +18,10 @@ class base_ro_property(Generic[_V_cov, _U], abc.ABC):
         ...
 
     @overload
-    def __get__(self: _Self, instance: None, owner: Type[_U]) -> _Self:
+    def __get__(self, instance: None, owner: Type[_U]) -> Self:
         ...
 
-    def __get__(self: _Self, instance: Optional[_U], owner: Optional[Type[_U]] = None) -> _V_cov | _Self:
+    def __get__(self, instance: Optional[_U], owner: Optional[Type[_U]] = None) -> _V_cov | Self:
         del owner
         if instance is None:
             return self
