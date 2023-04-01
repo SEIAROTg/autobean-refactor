@@ -1,6 +1,6 @@
 [project]
 name = "autobean-refactor"
-version = "0.2.2"
+version = "0.2.3"
 description = "An ergonomic and losess beancount manipulation library"
 authors = [
     {name = "SEIAROTg", email = "seiarotg@gmail.com"},
