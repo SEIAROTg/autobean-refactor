@@ -68,7 +68,7 @@ pad:          _leading_comment DATE PAD ACCOUNT ACCOUNT _comment_eol _meta_items
 event:        _leading_comment DATE EVENT ESCAPED_STRING ESCAPED_STRING _comment_eol _meta_items _trailing_comment
 query:        _leading_comment DATE QUERY ESCAPED_STRING ESCAPED_STRING _comment_eol _meta_items _trailing_comment
 price:        _leading_comment DATE PRICE CURRENCY amount _comment_eol _meta_items _trailing_comment
-note:         _leading_comment DATE NOTE ACCOUNT ESCAPED_STRING _comment_eol _meta_items _trailing_comment
+note:         _leading_comment DATE NOTE ACCOUNT ESCAPED_STRING repeated{_tag_or_link} _comment_eol _meta_items _trailing_comment
 document:     _leading_comment DATE DOCUMENT ACCOUNT ESCAPED_STRING repeated{_tag_or_link} _comment_eol _meta_items _trailing_comment
 open:         _leading_comment DATE OPEN ACCOUNT repeated_sep{CURRENCY, _COMMA} [ESCAPED_STRING] _comment_eol _meta_items _trailing_comment
 custom:       _leading_comment DATE CUSTOM ESCAPED_STRING repeated{_custom_value} _comment_eol _meta_items _trailing_comment

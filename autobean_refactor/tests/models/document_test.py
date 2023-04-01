@@ -10,6 +10,7 @@ class TestDocument(base.BaseTestModel):
     @pytest.mark.parametrize(
         'text,date,account,filename', [
             ('2000-01-01 document Assets:Foo "path/to/foo"', datetime.date(2000, 1, 1), 'Assets:Foo', 'path/to/foo'),
+            ('2000-01-01 document Assets:Foo "path/to/foo"  #foo ^bar', datetime.date(2000, 1, 1), 'Assets:Foo', 'path/to/foo'),
             ('2000-01-01  document  Assets:Foo  "path/to/foo"', datetime.date(2000, 1, 1), 'Assets:Foo', 'path/to/foo'),
         ],
     )

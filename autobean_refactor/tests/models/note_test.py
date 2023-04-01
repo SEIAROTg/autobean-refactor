@@ -10,6 +10,7 @@ class TestNote(base.BaseTestModel):
     @pytest.mark.parametrize(
         'text,date,account,comment', [
             ('2000-01-01 note Assets:Foo "foo"', datetime.date(2000, 1, 1), 'Assets:Foo', 'foo'),
+            ('2000-01-01 note Assets:Foo "foo"  #foo ^bar', datetime.date(2000, 1, 1), 'Assets:Foo', 'foo'),
             ('2000-01-01  note  Assets:Foo  "foo"', datetime.date(2000, 1, 1), 'Assets:Foo', 'foo'),
         ],
     )
