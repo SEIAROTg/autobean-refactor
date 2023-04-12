@@ -1,6 +1,7 @@
 import abc
 import copy
-from typing import Any, ClassVar, Iterator, Optional, Protocol, Self, Type, TypeVar, cast
+from typing import Any, ClassVar, Iterator, Optional, Protocol, TypeVar, cast
+from typing_extensions import Self
 from autobean_refactor import token_store as token_store_lib
 
 _T = TypeVar('_T', bound='RawTokenModel')

@@ -1,6 +1,7 @@
 import bisect
 import dataclasses
-from typing import Any, Collection, Generic, Iterable, Iterator, Optional, Self, TypeVar
+from typing import Any, Collection, Generic, Iterable, Iterator, Optional, TypeVar
+from typing_extensions import Self
 
 _T = TypeVar('_T', bound='Token')
 

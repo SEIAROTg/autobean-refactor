@@ -3,7 +3,8 @@
 
 import datetime
 import decimal
-from typing import Iterable, Iterator, Mapping, Optional, Self, final
+from typing import Iterable, Iterator, Mapping, Optional, final
+from typing_extensions import Self
 from .. import base, internal, meta_item_internal
 from ..account import Account
 from ..block_comment import BlockComment

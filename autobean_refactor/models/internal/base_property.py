@@ -1,5 +1,6 @@
 import abc
-from typing import Generic, Optional, Self, Type, TypeVar, overload
+from typing import Generic, Optional, Type, TypeVar, overload
+from typing_extensions import Self
 from .. import base
 
 _U = TypeVar('_U', bound=base.RawTreeModel)

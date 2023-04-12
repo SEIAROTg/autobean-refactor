@@ -1,5 +1,5 @@
 import decimal
-from typing import Self
+from typing_extensions import Self
 from . import internal
 from .generated import tolerance
 from .generated.tolerance import Tilde

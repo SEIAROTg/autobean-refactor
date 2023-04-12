@@ -1,6 +1,7 @@
 import datetime
 import itertools
-from typing import Iterable, Mapping, Optional, Self
+from typing import Iterable, Mapping, Optional
+from typing_extensions import Self
 from . import base, internal, meta_item_internal
 from .block_comment import BlockComment
 from .date import Date

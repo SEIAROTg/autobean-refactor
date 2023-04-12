@@ -1,6 +1,7 @@
 
 import abc
-from typing import Self, Type, TypeVar, final
+from typing import TypeVar, final
+from typing_extensions import Self
 from .. import base
 from .value_properties import RWValue
 

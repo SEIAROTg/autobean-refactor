@@ -1,4 +1,5 @@
-from typing import Self, final
+from typing import final
+from typing_extensions import Self
 from . import base
 from .internal import registry as _registry
 from .internal import spacing_accessors as _spacing_accessors

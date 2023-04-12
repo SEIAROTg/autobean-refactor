@@ -1,5 +1,6 @@
 import copy
-from typing import Generic, Iterable, Iterator, Optional, Self, TypeVar
+from typing import Generic, Iterable, Iterator, Optional, TypeVar
+from typing_extensions import Self
 from .. import base
 from .placeholder import Placeholder
 

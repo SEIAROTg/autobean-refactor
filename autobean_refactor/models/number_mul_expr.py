@@ -1,5 +1,6 @@
 import decimal
-from typing import Any, Iterator, Optional, Self, cast, final, TYPE_CHECKING
+from typing import Any, Iterator, Optional, cast, final, TYPE_CHECKING
+from typing_extensions import Self
 from . import base
 from . import internal
 from .spacing import Whitespace

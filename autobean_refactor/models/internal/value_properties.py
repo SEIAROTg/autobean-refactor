@@ -2,7 +2,8 @@ import datetime
 import decimal
 import abc
 import itertools
-from typing import Any, Callable, Collection, Generic, Iterable, Iterator, MutableSequence, Optional, Self, Type, TypeGuard, TypeVar, cast, overload
+from typing import Any, Callable, Collection, Generic, Iterable, Iterator, MutableSequence, Optional, Type, TypeGuard, TypeVar, cast, overload
+from typing_extensions import Self
 from .. import base
 from . import indexes, base_property, properties
 

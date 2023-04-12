@@ -148,8 +148,9 @@ requires_python = ">=3.7"
 summary = "Backported and Experimental Type Hints for Python 3.7+"
 
 [metadata]
-lock_version = "4.1"
-content_hash = "sha256:44091eddc19e7649f77700fb3a02513f6b6a691a639130e287360be3f22d0452"
+lock_version = "4.2"
+groups = ["default", "dev"]
+content_hash = "sha256:353efdc2b4d60e513d7e070ee272e1b2cd91db05f77b3865360ff2a304bd960d"
 
 [metadata.files]
 "attrs 22.1.0" = [

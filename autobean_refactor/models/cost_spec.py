@@ -1,7 +1,8 @@
 import copy
 import datetime
 import decimal
-from typing import MutableSequence, Optional, Self, Type
+from typing import MutableSequence, Optional, Type
+from typing_extensions import Self
 from .generated import cost_spec
 from .cost_component import CostComponent
 from . import internal

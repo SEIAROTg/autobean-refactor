@@ -1,6 +1,7 @@
 import datetime
 import decimal
-from typing import Iterable, Iterator, Mapping, Optional, Self, Union, get_args
+from typing import Iterable, Iterator, Mapping, Optional, Union, get_args
+from typing_extensions import Self
 
 from . import internal, meta_item_internal
 from .generated import custom
