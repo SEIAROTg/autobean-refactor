@@ -128,11 +128,14 @@ class Parser:
             raise exceptions.UnexpectedToken(tokens[1], {'$END'})
         return target.from_raw_text(tokens[0].value)
 
-    def parse(self, text: str, target: Type[_U]) -> _U:
+    def parse(self, text: str, target: Type[_U], *, auto_claim_comments: bool = True) -> _U:
         if target.INLINE:
-            return self._parse(text, target, self._lark_inline)
+            model = self._parse(text, target, self._lark_inline)
         else:
-            return self._parse(text, target, self._lark)
+            model = self._parse(text, target, self._lark)
+        if auto_claim_comments:
+            model.auto_claim_comments()
+        return model
 
     def parse_file_recursive(self, path: str) -> dict[str, models.File]:
         files = {}

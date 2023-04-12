@@ -67,14 +67,14 @@ _ADAPTIVE_INDENT_NESTED = '''\
 
 @pytest.fixture
 def simple_close(parser: parser_lib.Parser) -> models.Close:
-    return parser.parse(_SIMPLE, models.Close)
+    return parser.parse(_SIMPLE, models.Close, auto_claim_comments=False)
 
 
 class TestMeta(base.BaseTestModel):
 
     @pytest.mark.parametrize('text', [_SIMPLE, _WITH_INDENTED_COMMENT, _ADAPTIVE_INDENT])
     def test_parse_success(self, text: str) -> None:
-        close = self.parser.parse(text, models.Close)
+        close = self.parser.parse(text, models.Close, auto_claim_comments=False)
 
         assert len(close.meta) == 3
 

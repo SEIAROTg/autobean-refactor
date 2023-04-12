@@ -32,7 +32,7 @@ _FILE_BAR = '''\
 class TestInterleavingComment(base.BaseTestModel):
 
     def test_claim_comment_all(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         assert len(file.raw_directives_with_comments) == 2
         assert len(file.raw_directives) == 2
         assert len(file.directives) == 2
@@ -51,7 +51,7 @@ class TestInterleavingComment(base.BaseTestModel):
         # TODO: assert cmoment value
 
     def test_unclaim_comment(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         claimed_comments = file.raw_directives_with_comments.claim_interleaving_comments()
         assert len(claimed_comments) == 4
         assert len(file.raw_directives_with_comments) == 6
@@ -60,7 +60,7 @@ class TestInterleavingComment(base.BaseTestModel):
         assert len(file.raw_directives_with_comments) == 2
 
     def test_claim_comment_all_but_claimed(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         open_foo, open_bar = file.directives
         assert open_foo.claim_leading_comment() is not None
         claimed_comments = file.raw_directives_with_comments.claim_interleaving_comments()
@@ -74,7 +74,7 @@ class TestInterleavingComment(base.BaseTestModel):
         assert len(file.directives) == 2
 
     def test_claim_comment_selectively(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         open_foo, open_bar = file.directives
         leading_comment = open_foo.claim_leading_comment()
         assert leading_comment is not None
@@ -88,7 +88,7 @@ class TestInterleavingComment(base.BaseTestModel):
         assert len(file.directives) == 2
 
     def test_unclaim_comment_selectively(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         claimed_comments = file.raw_directives_with_comments.claim_interleaving_comments()
         assert len(claimed_comments) == 4
         unclaimed_comments = file.raw_directives_with_comments.unclaim_interleaving_comments(claimed_comments[1:3])
@@ -98,17 +98,17 @@ class TestInterleavingComment(base.BaseTestModel):
         assert len(file.directives) == 2
 
     def test_claim_comment_selectively_different_token_store(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         open_foo, open_bar = file.directives
         leading_comment = open_foo.claim_leading_comment()
         assert leading_comment is not None
         open_foo.unclaim_leading_comment()
-        file2 = self.parser.parse(_FILE_FOO, models.File)
+        file2 = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         with pytest.raises(ValueError, match='not found'):
             file2.raw_directives_with_comments.claim_interleaving_comments([leading_comment])
         
     def test_claim_comment_selectively_out_of_scope(self) -> None:
-        file = self.parser.parse(_FILE_BAR, models.File)
+        file = self.parser.parse(_FILE_BAR, models.File, auto_claim_comments=False)
         file_comments = file.raw_directives_with_comments.claim_interleaving_comments()
         file.raw_directives_with_comments.unclaim_interleaving_comments()
         txn, = file.directives
@@ -117,7 +117,7 @@ class TestInterleavingComment(base.BaseTestModel):
             txn.raw_meta_with_comments.claim_interleaving_comments(file_comments)
 
     def test_claim_comment_selectively_already_claimed(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         open_foo, open_bar = file.directives
         leading_comment = open_foo.claim_leading_comment()
         assert leading_comment is not None
@@ -125,15 +125,15 @@ class TestInterleavingComment(base.BaseTestModel):
             file.raw_directives_with_comments.claim_interleaving_comments([leading_comment])
 
     def test_unclaim_comment_selectively_different_token_store(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         claimed_comments = file.raw_directives_with_comments.claim_interleaving_comments()
-        file2 = self.parser.parse(_FILE_FOO, models.File)
+        file2 = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         file2.raw_directives_with_comments.claim_interleaving_comments()
         with pytest.raises(ValueError, match='not found'):
             file2.raw_directives_with_comments.unclaim_interleaving_comments(claimed_comments)
     
     def test_unclaim_comment_selectively_out_of_scope(self) -> None:
-        file = self.parser.parse(_FILE_BAR, models.File)
+        file = self.parser.parse(_FILE_BAR, models.File, auto_claim_comments=False)
         file_comments = file.raw_directives_with_comments.claim_interleaving_comments()
         txn, = file.directives
         assert isinstance(txn, models.Transaction)
@@ -141,14 +141,14 @@ class TestInterleavingComment(base.BaseTestModel):
             txn.raw_meta_with_comments.unclaim_interleaving_comments(file_comments)
     
     def test_unclaim_comment_selectively_already_unalcimed(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         claimed_comments = file.raw_directives_with_comments.claim_interleaving_comments()
         file.raw_directives_with_comments.unclaim_interleaving_comments()
         with pytest.raises(ValueError, match='not found'):
             file.raw_directives_with_comments.unclaim_interleaving_comments(claimed_comments)
 
     def test_claim_comment_scoped(self) -> None:
-        file = self.parser.parse(_FILE_BAR, models.File)
+        file = self.parser.parse(_FILE_BAR, models.File, auto_claim_comments=False)
         txn, = file.raw_directives
         assert isinstance(txn, models.Transaction)
         assert len(txn.raw_meta_with_comments) == 1
@@ -181,7 +181,7 @@ class TestInterleavingComment(base.BaseTestModel):
         self.assert_iterable_same(claimed_comments, [comment_foo, comment_bar])
 
     def test_claim_comment_move_placeholder(self) -> None:
-        file = self.parser.parse(_FILE_BAR, models.File)
+        file = self.parser.parse(_FILE_BAR, models.File, auto_claim_comments=False)
         txn, = file.raw_directives
         assert isinstance(txn, models.Transaction)
         claimed_comments = txn.raw_meta_with_comments.claim_interleaving_comments()
@@ -201,7 +201,7 @@ class TestInterleavingComment(base.BaseTestModel):
 '''
 
     def test_claim_comment_move_placeholder_again(self) -> None:
-        file = self.parser.parse(_FILE_BAR, models.File)
+        file = self.parser.parse(_FILE_BAR, models.File, auto_claim_comments=False)
         txn, = file.raw_directives
         assert isinstance(txn, models.Transaction)
         meta_comments = txn.raw_meta_with_comments.claim_interleaving_comments()
@@ -212,7 +212,7 @@ class TestInterleavingComment(base.BaseTestModel):
         self.check_disjoint(txn._meta, txn._postings)
 
     def test_insert_comment(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         file.raw_directives_with_comments.claim_interleaving_comments()
         comment = models.BlockComment.from_value('aaa\nbbb')
         file.raw_directives_with_comments.insert(4, comment)
@@ -237,7 +237,7 @@ class TestInterleavingComment(base.BaseTestModel):
 '''
 
     def test_remove_comment(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         file.raw_directives_with_comments.claim_interleaving_comments()
         pop_comment = file.raw_directives_with_comments.pop(3)
         assert isinstance(pop_comment, models.BlockComment)
@@ -257,7 +257,7 @@ class TestInterleavingComment(base.BaseTestModel):
 '''
 
     def test_from_children(self) -> None:
-        file = self.parser.parse(_FILE_FOO, models.File)
+        file = self.parser.parse(_FILE_FOO, models.File, auto_claim_comments=False)
         file.raw_directives_with_comments.claim_interleaving_comments()
         file = models.File.from_children(copy.deepcopy(file.raw_directives_with_comments[:]))
         assert self.print_model(file) == '''\

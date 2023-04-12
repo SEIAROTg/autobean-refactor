@@ -155,7 +155,7 @@ class TestSurroundingComment(base.BaseTestModel):
    ; quux'''
 
     def test_claim_leading(self) -> None:
-        close = self.parser.parse(_CLOSE_BOTH, models.Close)
+        close = self.parser.parse(_CLOSE_BOTH, models.Close, auto_claim_comments=False)
         assert close.raw_leading_comment is None
         claimed_comment = close.claim_leading_comment()
         assert claimed_comment is not None
@@ -170,7 +170,7 @@ class TestSurroundingComment(base.BaseTestModel):
         assert self.print_model(close) == _CLOSE_NEITHER
 
     def test_claim_leading_already_claimed(self) -> None:
-        file = self.parser.parse(_CLOSE_MULTIPLE, models.File)
+        file = self.parser.parse(_CLOSE_MULTIPLE, models.File, auto_claim_comments=False)
         close_foo, close_bar = file.directives
         close_foo.claim_trailing_comment()
         with pytest.raises(ValueError, match='already claimed'):
@@ -179,13 +179,13 @@ class TestSurroundingComment(base.BaseTestModel):
         assert close_bar.claim_leading_comment() is not None
 
     def test_claim_leading_already_claimed_suppressed(self) -> None:
-        file = self.parser.parse(_CLOSE_MULTIPLE, models.File)
+        file = self.parser.parse(_CLOSE_MULTIPLE, models.File, auto_claim_comments=False)
         close_foo, close_bar = file.directives
         close_foo.claim_trailing_comment()
         assert close_bar.claim_leading_comment(ignore_if_already_claimed=True) is None
 
     def test_claim_trailing(self) -> None:
-        close = self.parser.parse(_CLOSE_BOTH, models.Close)
+        close = self.parser.parse(_CLOSE_BOTH, models.Close, auto_claim_comments=False)
         assert close.raw_trailing_comment is None
         claimed_comment = close.claim_trailing_comment()
         assert claimed_comment is not None
@@ -199,7 +199,7 @@ class TestSurroundingComment(base.BaseTestModel):
         assert self.print_model(close) == _CLOSE_NEITHER
 
     def test_claim_trailing_already_claimed(self) -> None:
-        file = self.parser.parse(_CLOSE_MULTIPLE, models.File)
+        file = self.parser.parse(_CLOSE_MULTIPLE, models.File, auto_claim_comments=False)
         close_foo, close_bar = file.directives
         close_bar.claim_leading_comment()
         with pytest.raises(ValueError, match='already claimed'):
@@ -208,7 +208,7 @@ class TestSurroundingComment(base.BaseTestModel):
         assert close_foo.claim_trailing_comment() is not None
 
     def test_claim_trailing_already_claimed_suppressed(self) -> None:
-        file = self.parser.parse(_CLOSE_MULTIPLE, models.File)
+        file = self.parser.parse(_CLOSE_MULTIPLE, models.File, auto_claim_comments=False)
         close_foo, close_bar = file.directives
         close_bar.claim_leading_comment()
         assert close_foo.claim_trailing_comment(ignore_if_already_claimed=True) is None
@@ -219,13 +219,13 @@ class TestSurroundingComment(base.BaseTestModel):
         assert close.claim_trailing_comment() is None
 
     def test_claim_separated(self) -> None:
-        file = self.parser.parse(_CLOSE_BOTH_SEPARATED, models.File)
+        file = self.parser.parse(_CLOSE_BOTH_SEPARATED, models.File, auto_claim_comments=False)
         close, = file.directives
         assert close.claim_leading_comment() is None
         assert close.claim_trailing_comment() is None
 
     def test_claim_move_placeholder(self) -> None:
-        file = self.parser.parse(_CLOSE_BOTH_INDENTED, models.File)
+        file = self.parser.parse(_CLOSE_BOTH_INDENTED, models.File, auto_claim_comments=False)
         txn, = file.directives
         assert isinstance(txn, models.Transaction)
         meta, = txn.raw_meta
@@ -244,7 +244,7 @@ class TestSurroundingComment(base.BaseTestModel):
 '''
 
     def test_claim_move_placeholder_again(self) -> None:
-        file = self.parser.parse(_CLOSE_BOTH_INDENTED, models.File)
+        file = self.parser.parse(_CLOSE_BOTH_INDENTED, models.File, auto_claim_comments=False)
         txn, = file.directives
         assert isinstance(txn, models.Transaction)
         meta, = txn.raw_meta
