@@ -1,6 +1,6 @@
 import copy
 import decimal
-from typing import Any, Callable, Literal, NoReturn, Union, overload
+from typing import Callable, Literal, NoReturn, Union, overload
 from . import base
 from . import internal
 from . import number
@@ -15,20 +15,6 @@ from .generated.number_unary_expr import UnaryOp
 from .generated import number_expr
 
 _AnyNumber = Union[int, decimal.Decimal, 'NumberExpr']
-_OP_INFO = {
-    '__iadd__': ('+=', False),
-    '__isub__': ('-=', False),
-    '__imul__': ('*=', False),
-    '__itruediv__': ('/=', False),
-    '__add__': ('+', False),
-    '__sub__': ('-', False),
-    '__mul__': ('*', False),
-    '__truediv__': ('/', False),
-    '__radd__': ('+', True),
-    '__rsub__': ('-', True),
-    '__rmul__': ('*', True),
-    '__rtruediv__': ('/', True),
-}
 
 
 def _add_expr_from_value(value: decimal.Decimal) -> NumberAddExpr:
@@ -55,16 +41,7 @@ def _operand_type_check(
             other = NumberExpr.from_value(other)
         if isinstance(other, NumberExpr):
             return op(self, other)
-        op_name, rev = _OP_INFO[op.__name__]
-        lhs: Any
-        rhs: Any
-        if rev:
-            lhs, rhs = other, self
-        else:
-            lhs, rhs = self, other
-        raise TypeError(
-            f'unsupported operand type(s) for {op_name}: '
-            f'{type(lhs).__name__!r} and {type(rhs).__name__!r}.')
+        return NotImplemented
     return wrapped_op
 
 
