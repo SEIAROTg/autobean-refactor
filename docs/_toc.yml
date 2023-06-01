@@ -1,0 +1,20 @@
+format: jb-book
+root: getting-started
+parts:
+- caption:
+  chapters:
+  - file: examples
+  - file: guarantees
+- caption: Generic interfaces
+  chapters:
+  - file: generic/models
+  - file: generic/token-models
+  - file: generic/tree-models
+- caption: Sepcial interfaces
+  chapters:
+  - file: special/meta
+  - file: special/numbers
+  - file: special/prices-costs
+  - file: special/comments
+  - file: special/spacing
+  - file: special/indents

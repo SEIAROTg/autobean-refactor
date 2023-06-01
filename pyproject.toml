@@ -36,4 +36,5 @@ dev = [
     "pytest-benchmark>=4.0.0",
     "mako>=1.2.4",
     "stringcase>=1.2.0",
+    "jupyter-book>=0.15.1",
 ]

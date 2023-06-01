@@ -1,0 +1,22 @@
+title: autobean-refactor
+author: SEIAROTg
+
+execute:
+  execute_notebooks: force
+
+repository:
+  url: https://github.com/SEIAROTg/autobean-refactor
+  path_to_book: docs
+  branch: main
+
+html:
+  use_issues_button: true
+  use_repository_button: true
+
+sphinx:
+  extra_extensions:
+  - 'sphinx.ext.intersphinx'
+  config:
+    myst_heading_anchors: 2
+    intersphinx_mapping:
+      python: ['https://docs.python.org/3', null]
