@@ -91,7 +91,7 @@ def test_getitem_repeated(repeat: int, benchmark: BenchmarkFixture, parser: pars
 
 
 @pytest.mark.benchmark(group='getitem_repeated_filtered')
-@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000, 10000])
 def test_getitem_repeated_filtered(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
     benchmark(_getitem_repeated_filtered, file)

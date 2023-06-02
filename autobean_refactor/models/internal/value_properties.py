@@ -1,3 +1,4 @@
+import bisect
 import datetime
 import decimal
 import abc
@@ -137,6 +138,37 @@ class optional_date_property(Generic[_U]):
             self._inner_property.__set__(instance, s)
 
 
+class _RepeatedValueWrapperUpdateHandler(properties.RepeatedNodeWrapperUpdateHandler):
+    def __init__(
+            self,
+            raw_wrapper: properties.RepeatedNodeWrapper[Any],
+            raw_type: Type[_M] | tuple[Type[_M], ...],
+            raw_indexes: list[int],
+    ) -> None:
+        self._raw_wrapper = raw_wrapper
+        self._raw_type = raw_type
+        self._raw_indexes = raw_indexes
+
+    def handle(self) -> None:
+        self._raw_indexes[:] = [
+            i for i, model in enumerate(self._raw_wrapper)
+            if isinstance(model, self._raw_type)]
+
+    def handle_splice(self, l: int, r: int, values: list[Any]) -> None:
+        filtered_indexes = [
+            l + i
+            for i, value in enumerate(values)
+            if isinstance(value, self._raw_type)
+        ]
+        ll = bisect.bisect_left(self._raw_indexes, l)
+        rr = bisect.bisect_left(self._raw_indexes, r)
+        diff = len(values) - r + l
+        self._raw_indexes[ll:rr] = filtered_indexes
+        if diff:
+            for i in range(ll + len(filtered_indexes), len(self._raw_indexes)):
+                self._raw_indexes[i] += diff
+
+
 class RepeatedValueWrapper(MutableSequence[_V], Generic[_M, _V]):
     def __init__(
             self,
@@ -151,19 +183,20 @@ class RepeatedValueWrapper(MutableSequence[_V], Generic[_M, _V]):
         self._from_raw_type = from_raw_type
         self._to_raw_type = to_raw_type
         self._update_raw = update_raw
+        self._raw_indexes = [
+            i for i, item in enumerate(self._raw_wrapper) if isinstance(item, self._raw_type)]
+        self._raw_wrapper.register_update_handler(
+            _RepeatedValueWrapperUpdateHandler(raw_wrapper, raw_type, self._raw_indexes))
 
     def _check_type(self, v: Any) -> TypeGuard[_M]:
         return isinstance(v, self._raw_type)
 
     def __len__(self) -> int:
-        return sum(1 for _ in self)
+        return len(self._raw_indexes)
 
     def __iter__(self) -> Iterator[_V]:
         return (
-            self._from_raw_type(item) for item in self._raw_wrapper if self._check_type(item))
-
-    def _filtered_items(self) -> list[tuple[int, _M]]:
-        return [(i, item) for i, item in enumerate(self._raw_wrapper) if isinstance(item, self._raw_type)]
+            self._from_raw_type(self._raw_wrapper[i]) for i in self._raw_indexes)
 
     @overload
     def __getitem__(self, index: int) -> _V:
@@ -172,15 +205,13 @@ class RepeatedValueWrapper(MutableSequence[_V], Generic[_M, _V]):
     def __getitem__(self, index: slice) -> list[_V]:
         ...
     def __getitem__(self, index: int | slice) -> _V | list[_V]:
-        items = self._filtered_items()
         if isinstance(index, int):
-            return self._from_raw_type(items[index][1])
-        return [self._from_raw_type(item[1]) for item in items[index]]
+            return self._from_raw_type(self._raw_wrapper[self._raw_indexes[index]])
+        return [self._from_raw_type(self._raw_wrapper[i]) for i in self._raw_indexes[index]]
 
     def __delitem__(self, index: int | slice) -> None:
-        items = self._filtered_items()
-        r = indexes.range_from_index(index, len(items))
-        self._raw_wrapper.drop_many(items[i][0] for i in r)
+        r = indexes.range_from_index(index, len(self._raw_indexes))
+        self._raw_wrapper.drop_many(self._raw_indexes[i] for i in r)
 
     @overload
     def __setitem__(self, index: int, value: _V) -> None:
@@ -189,62 +220,56 @@ class RepeatedValueWrapper(MutableSequence[_V], Generic[_M, _V]):
     def __setitem__(self, index: slice, value: Iterable[_V]) -> None:
         ...
     def __setitem__(self, index: int | slice, value: _V | Iterable[_V]) -> None:
-        items = self._filtered_items()
         if isinstance(index, int):
             values = [cast(_V, value)]
         else:
             assert isinstance(value, Iterable)
             values = list(value)
-        r = indexes.range_from_index(index, len(items))
-        items_to_update = items[indexes.slice_from_range(r)]
+        r = indexes.range_from_index(index, len(self._raw_indexes))
+        raw_indexes_to_update = self._raw_indexes[indexes.slice_from_range(r)]
         # We don't allow assignment with distinct length here because the underlying models may not be consecutive.
-        if len(items_to_update) != len(values):
-            raise ValueError(f'attempt to assign sequence of size {len(values)} to extended slice of size {len(items_to_update)}')
-        for item, value in zip(items_to_update, values):
-            if not self._update_raw(item[1], value):
-                self._raw_wrapper[item[0]] = self._to_raw_type(value)
+        if len(raw_indexes_to_update) != len(values):
+            raise ValueError(
+                f'attempt to assign sequence of size {len(values)} to extended slice of size '
+                f'{len(raw_indexes_to_update)}')
+        for raw_index, value in zip(raw_indexes_to_update, values):
+            if not self._update_raw(self._raw_wrapper[raw_index], value):
+                self._raw_wrapper[raw_index] = self._to_raw_type(value)
 
     def insert(self, index: int, value: _V) -> None:
-        items = self._filtered_items()
-        if index >= len(items):
-            underlying_index = len(self._raw_wrapper)
-        elif index < -len(items):
-            underlying_index = 0
+        if index >= len(self._raw_indexes):
+            raw_index = len(self._raw_wrapper)
+        elif index < -len(self._raw_indexes):
+            raw_index = 0
         else:
-            underlying_index = items[index][0]
-        self._raw_wrapper.insert(underlying_index, self._to_raw_type(value))
+            raw_index = self._raw_indexes[index]
+        self._raw_wrapper.insert(raw_index, self._to_raw_type(value))
 
     def append(self, value: _V) -> None:
         self._raw_wrapper.append(self._to_raw_type(value))
 
     def clear(self) -> None:
-        items = self._filtered_items()
-        self._raw_wrapper.drop_many(item[0] for item in items)
+        self._raw_wrapper.drop_many(self._raw_indexes)
 
     def extend(self, values: Iterable[_V]) -> None:
         self._raw_wrapper.extend(self._to_raw_type(value) for value in values)
 
     def pop(self, index: int = -1) -> _V:
-        items = self._filtered_items()
-        if not items:
-            raise IndexError('pop from empty list')
-        if not -len(items) <= index < len(items):
+        if not -len(self._raw_indexes) <= index < len(self._raw_indexes):
             raise IndexError('pop index out of range')
-        underlying_index = items[index][0]
-        self._raw_wrapper.pop(underlying_index)
-        return self._from_raw_type(items[index][1])
+        raw_index = self._raw_indexes[index]
+        return self._from_raw_type(self._raw_wrapper.pop(raw_index))
 
     def remove(self, value: _V) -> None:
-        items = self._filtered_items()
-        for i, item in items:
-            if self._from_raw_type(item) == value:
-                self._raw_wrapper.pop(i)
+        for raw_index in self._raw_indexes:
+            if self._from_raw_type(self._raw_wrapper[raw_index]) == value:
+                self._raw_wrapper.pop(raw_index)
                 return
         raise ValueError(f'{value!r} not found in list')
 
     def discard(self, value: _V) -> None:
-        items = self._filtered_items()
-        self._raw_wrapper.drop_many(item[0] for item in items if self._from_raw_type(item[1]) == value)
+        self._raw_wrapper.drop_many(
+            i for i in self._raw_indexes if self._from_raw_type(self._raw_wrapper[i]) == value)
 
     def __eq__(self, other: object) -> bool:
         return (

@@ -53,9 +53,11 @@ class _CommentClaimer(Generic[_M]):
     def __init__(
             self,
             repeated: repeated.Repeated[_M | BlockComment],
+            notify: Callable[[], None],
             model: base.RawTreeModel,
             comments: Optional[Iterable[BlockComment]]):
         self._repeated = repeated
+        self._notify = notify
         self._model = model
         self._comments_to_claim = (
             {id(comment) for comment in comments} if comments is not None else _Universe())
@@ -137,6 +139,7 @@ class _CommentClaimer(Generic[_M]):
                 comments.append(item)
                 item.claimed = True
         self._repeated.items[:] = items
+        self._notify()
         return comments
 
 
@@ -155,7 +158,11 @@ class RepeatedNodeWithInterleavingCommentsWrapper(properties.RepeatedNodeWrapper
             self,
             comments: Optional[Iterable[BlockComment]] = None,
     ) -> tuple[BlockComment, ...]:
-        return tuple(_CommentClaimer(self._repeated, self._model, comments).claim())
+        return tuple(_CommentClaimer(
+            self._repeated,
+            self._notify,
+            self._model,
+            comments).claim())
 
     def unclaim_interleaving_comments(
             self,
@@ -179,6 +186,7 @@ class RepeatedNodeWithInterleavingCommentsWrapper(properties.RepeatedNodeWrapper
         if comment_set:
             raise ValueError(f'{len(comment_set)} comment(s) not found.')
         self._repeated.items[:] = items
+        self._notify()
         return tuple(unclaimed_comments)
 
     def auto_claim_comments(self) -> None:

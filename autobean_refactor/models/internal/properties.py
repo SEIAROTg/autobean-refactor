@@ -1,3 +1,4 @@
+import abc
 import copy
 import functools
 import itertools
@@ -65,10 +66,22 @@ class optional_node_property(base_rw_property[Optional[_M], _U]):
         self._inner_field.__set__(instance, value)
 
 
+class RepeatedNodeWrapperUpdateHandler(abc.ABC):
+
+    @abc.abstractmethod
+    def handle(self) -> None:
+        ...
+
+    @abc.abstractmethod
+    def handle_splice(self, l: int, r: int, value: list[Any]) -> None:
+        ...
+
+
 class RepeatedNodeWrapper(MutableSequence[_M]):
     def __init__(self, repeated: Repeated[_M], field: repeated_field) -> None:
         self._repeated = repeated
         self._field = field
+        self._update_handlers = list[RepeatedNodeWrapperUpdateHandler]()
 
     @property
     def repeated(self) -> Repeated[_M]:
@@ -83,6 +96,17 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
         return (
             self._field.separators_before
             if self._field.separators_before is not None else self._field.separators)
+
+    def register_update_handler(self, handler: RepeatedNodeWrapperUpdateHandler) -> None:
+        self._update_handlers.append(handler)
+
+    def _notify(self) -> None:
+        for handler in self._update_handlers:
+            handler.handle()
+
+    def _notify_splice(self, l: int, r: int, values: list[_M]) -> None:
+        for handler in self._update_handlers:
+            handler.handle_splice(l, r, values)
 
     def __len__(self) -> int:
         return len(self._repeated.items)
@@ -166,6 +190,7 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
             self._repeated.token_store.splice(value.detach(), item.first_token, item.last_token)
             value.reattach(self._repeated.token_store)
             self._repeated.items[index] = value
+            self._notify_splice(index, index + 1, [value])
             return
         assert isinstance(value, Iterable)
         values = list(value)
@@ -180,6 +205,7 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
             self._repeated.items[indexes.slice_from_range(r)] = values
             for value in values:
                 value.reattach(self._repeated.token_store)
+            self._notify_splice(r.start, r.stop, values)
         else:
             if len(r) != len(values):
                 raise ValueError(f'attempt to assign sequence of size {len(values)} to extended slice of size {len(r)}')
@@ -188,26 +214,34 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
                 self._insert_tokens(i, [value], len(self._repeated.items) - 1, separators_before_last)
                 value.reattach(self._repeated.token_store)
                 self._repeated.items[i] = value
+            self._notify()
 
     def insert(self, index: int, value: _M) -> None:
         index = min(index, len(self._repeated.items))
         self._insert_tokens(index, [value])
         value.reattach(self._repeated.token_store)
         self._repeated.items.insert(index, value)
+        self._notify_splice(index, index, [value])
 
     def append(self, value: _M) -> None:
-        self._insert_tokens(len(self._repeated.items), [value])
+        index = len(self._repeated.items)
+        self._insert_tokens(index, [value])
         value.reattach(self._repeated.token_store)
         self._repeated.items.append(value)
+        self._notify_splice(index, index, [value])
 
     def clear(self) -> None:
-        self._del_tokens(0, len(self._repeated.items))
+        index = len(self._repeated.items)
+        self._del_tokens(0, index)
         self._repeated.items.clear()
+        self._notify()
 
     def extend(self, values: Iterable[_M]) -> None:
         values = list(values)
-        self._insert_tokens(len(self._repeated.items), values)
+        index = len(self._repeated.items)
+        self._insert_tokens(index, values)
         self._repeated.items.extend(values)
+        self._notify_splice(index, index, values)
 
     def pop(self, index: int = -1) -> _M:
         value = self._repeated.items[index]
@@ -217,6 +251,7 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
         token_store = base.TokenStore.from_tokens(tokens)
         value.reattach(token_store)
         self._repeated.items.pop(index)
+        self._notify_splice(r.start, r.stop, [])
         return value
 
     def __deepcopy__(self, memo: dict[int, Any]) -> 'RepeatedNodeWrapper':
@@ -234,6 +269,7 @@ class RepeatedNodeWrapper(MutableSequence[_M]):
         self._repeated.items[:] = (
             item for i, item in enumerate(self._repeated.items) if i not in indexes
         )
+        self._notify()
 
     def __eq__(self, other: object) -> bool:
         return (
