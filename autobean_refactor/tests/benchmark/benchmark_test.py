@@ -30,25 +30,21 @@ def _parse_file(parser: parser_lib.Parser, text: str) -> models.File:
     return parser.parse(text, models.File)
 
 
-def _update_comment(file: models.File, index: int) -> None:
-    txn = file.raw_directives_with_comments[index]
-    assert isinstance(txn, models.Transaction)
-    comment = txn.leading_comment
-    assert comment is not None
-    file.raw_directives[index].leading_comment = comment[::-1]
+def _update_comment(transaction: models.Transaction) -> None:
+    transaction.leading_comment = transaction.leading_comment[::-1]  # type: ignore[index]
 
 
-def _getitem_repeated(file: models.File, filtered: bool) -> models.Directive | models.BlockComment:
-    if filtered:
-        return file.raw_directives[-1]
+def _getitem_repeated(file: models.File) -> models.Directive | models.BlockComment:
     return file.raw_directives_with_comments[-1]
 
 
-def _insert_meta(file: models.File, index: int) -> None:
-    txn = file.raw_directives[index]
-    assert isinstance(txn, models.Transaction)
-    meta = txn.raw_meta_with_comments.pop(-1)
-    txn.raw_meta_with_comments.insert(0, meta)
+def _getitem_repeated_filtered(file: models.File) -> models.Directive:
+    return file.raw_directives[-1]
+
+
+def _insert_meta(transaction: models.Transaction) -> None:
+    meta = transaction.raw_meta_with_comments.pop(-1)
+    transaction.raw_meta_with_comments.insert(0, meta)
 
 
 @pytest.mark.benchmark(group='parse_simple')
@@ -66,36 +62,54 @@ def test_parse_complex(repeat: int, benchmark: BenchmarkFixture, parser: parser_
 @pytest.mark.benchmark(group='update_end')
 @pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
 def test_update_end(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
-    file = parser.parse(_FILE_COMPLEX * repeat, models.File)
-    file.raw_directives_with_comments[-1].auto_claim_comments()
-    benchmark(_update_comment, file, -1)
+    file = parser.parse(_FILE_COMPLEX * repeat, models.File, auto_claim_comments=False)
+    txn = file.raw_directives_with_comments[-1]
+    txn.auto_claim_comments()
+    assert isinstance(txn, models.Transaction)
+    assert txn.leading_comment is not None
+
+    benchmark(_update_comment, txn)
 
 
 @pytest.mark.benchmark(group='update_start')
 @pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
 def test_update_start(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
-    file = parser.parse(_FILE_COMPLEX * repeat, models.File)
-    file.raw_directives_with_comments[0].auto_claim_comments()
-    benchmark(_update_comment, file, 0)
+    file = parser.parse(_FILE_COMPLEX * repeat, models.File, auto_claim_comments=False)
+    txn = file.raw_directives_with_comments[0]
+    txn.auto_claim_comments()
+    assert isinstance(txn, models.Transaction)
+    assert txn.leading_comment is not None
+
+    benchmark(_update_comment, txn)
 
 
 @pytest.mark.benchmark(group='getitem_repeated')
 @pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
-@pytest.mark.parametrize('filtered', [True, False])
-def test_getitem_repeated(repeat: int, filtered: bool, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
+def test_getitem_repeated(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
-    benchmark(_getitem_repeated, file, filtered)
+    benchmark(_getitem_repeated, file)
+
+
+@pytest.mark.benchmark(group='getitem_repeated_filtered')
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+def test_getitem_repeated_filtered(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
+    file = parser.parse(_FILE_COMPLEX * repeat, models.File)
+    benchmark(_getitem_repeated_filtered, file)
 
 
 @pytest.mark.benchmark(group='insert_meta_end')
 @pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
 def test_insert_meta_end(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
-    benchmark(_insert_meta, file, -1)
+    txn = file.raw_directives_with_comments[-1]
+    assert isinstance(txn, models.Transaction)
+    benchmark(_insert_meta, txn)
 
 
 @pytest.mark.benchmark(group='insert_meta_start')
 @pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
 def test_insert_meta_start(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
-    benchmark(_insert_meta, file, 0)
+    txn = file.raw_directives_with_comments[0]
+    assert isinstance(txn, models.Transaction)
+    benchmark(_insert_meta, txn)
