@@ -60,7 +60,7 @@ def test_parse_complex(repeat: int, benchmark: BenchmarkFixture, parser: parser_
 
 
 @pytest.mark.benchmark(group='update_end')
-@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000, 10000])
 def test_update_end(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File, auto_claim_comments=False)
     txn = file.raw_directives_with_comments[-1]
@@ -72,7 +72,7 @@ def test_update_end(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib
 
 
 @pytest.mark.benchmark(group='update_start')
-@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000, 10000])
 def test_update_start(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File, auto_claim_comments=False)
     txn = file.raw_directives_with_comments[0]
@@ -84,7 +84,7 @@ def test_update_start(repeat: int, benchmark: BenchmarkFixture, parser: parser_l
 
 
 @pytest.mark.benchmark(group='getitem_repeated')
-@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000, 10000])
 def test_getitem_repeated(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
     benchmark(_getitem_repeated, file)
@@ -98,7 +98,7 @@ def test_getitem_repeated_filtered(repeat: int, benchmark: BenchmarkFixture, par
 
 
 @pytest.mark.benchmark(group='insert_meta_end')
-@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000, 10000])
 def test_insert_meta_end(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
     txn = file.raw_directives_with_comments[-1]
@@ -107,7 +107,7 @@ def test_insert_meta_end(repeat: int, benchmark: BenchmarkFixture, parser: parse
 
 
 @pytest.mark.benchmark(group='insert_meta_start')
-@pytest.mark.parametrize('repeat', [1, 10, 100, 1000])
+@pytest.mark.parametrize('repeat', [1, 10, 100, 1000, 10000])
 def test_insert_meta_start(repeat: int, benchmark: BenchmarkFixture, parser: parser_lib.Parser) -> None:
     file = parser.parse(_FILE_COMPLEX * repeat, models.File)
     txn = file.raw_directives_with_comments[0]

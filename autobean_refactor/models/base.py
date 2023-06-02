@@ -108,7 +108,7 @@ class RawTokenModel(token_store_lib.Token, RawModel):
 
     @property
     def token_store(self) -> Optional[TokenStore]:
-        return self.store_handle.store if self.store_handle else None
+        return self.store_handle.block.store if self.store_handle else None
 
     @property
     def first_token(self) -> 'RawTokenModel':
