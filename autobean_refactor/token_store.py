@@ -211,9 +211,26 @@ class TokenStore(Generic[_T]):
 
         if start_i == end_i:
             len_removed = end_j - start_j
+            block = self._blocks[start_i]
+            lines_diff = 0
             for j in range(start_j, end_j):
-                self._blocks[start_i].tokens[j].store_handle = None
-            self._blocks[start_i].tokens[start_j:end_j] = tokens
+                block.tokens[j].store_handle = None
+                lines_diff -= block.tokens[j].size.line
+            block.tokens[start_j:end_j] = tokens
+
+            if (
+                    len(block.tokens) < _DOUBLE_LOAD_FACTOR and
+                    (len(block.tokens) > _HALF_LOAD_FACTOR or len(self._blocks) == 1) and
+                    block.last_newline_index >= end_j
+            ):
+                for token in tokens:
+                    lines_diff += token.size.line
+                for j in range(start_j, len(block.tokens)):
+                    block.tokens[j].store_handle = _StoreHandle(block=block, index=j)
+                block.last_newline_index += len(tokens) - len_removed
+                block.size.line += lines_diff
+            else:
+                self._update_block(block)
         else:
             len_removed = len(self._blocks[start_i].tokens) - start_j + end_j
             for j in range(start_j, len(self._blocks[start_i].tokens)):
@@ -231,7 +248,7 @@ class TokenStore(Generic[_T]):
                     *self._blocks[end_i].tokens[end_j:], 
                 ])
             ]
-        self._update_block(self._blocks[start_i])
+            self._update_block(self._blocks[start_i])
         self._len += len(tokens) - len_removed
 
     def splice(self, tokens: Sequence[_T], ref: Optional[_T], del_end: Optional[_T] = None) -> None:
