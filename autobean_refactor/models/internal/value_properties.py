@@ -49,24 +49,24 @@ class RWValueWithIndent(RWValue[_V]):
         raise NotImplementedError()
 
 
-class required_value_property(Generic[_V, _U]):
+class required_value_property(properties.base_rw_property[_V, _U]):
     def __init__(self, inner_property: base_property.base_ro_property[RWValue[_V], _U]):
         self._inner_property = inner_property
 
-    def __get__(self, instance: _U, owner: Optional[Type[_U]] = None) -> _V:
-        return self._inner_property.__get__(instance, owner).value
+    def _get(self, instance: _U) -> _V:
+        return self._inner_property.__get__(instance).value
     
     def __set__(self, instance: _U, value: _V) -> None:
         self._inner_property.__get__(instance).value = value
 
 
-class optional_string_property(Generic[_SV]):
+class optional_string_property(properties.base_rw_property[Optional[str], _U]):
     def __init__(self, inner_property: base_property.base_rw_property[Optional[_SV], _U], inner_type: Type[_SV]):
         self._inner_property = inner_property
         self._inner_type = inner_type
 
-    def __get__(self, instance: _U, owner: Optional[Type[_U]] = None) -> Optional[str]:
-        s = self._inner_property.__get__(instance, owner)
+    def _get(self, instance: _U) -> Optional[str]:
+        s = self._inner_property.__get__(instance)
         return s.value if s is not None else None
     
     def __set__(self, instance: _U, value: Optional[str]) -> None:
@@ -78,7 +78,7 @@ class optional_string_property(Generic[_SV]):
             self._inner_property.__set__(instance, s)
 
 
-class optional_indented_string_property(Generic[_ISV]):
+class optional_indented_string_property(properties.base_rw_property[Optional[str], _U]):
     def __init__(
             self,
             inner_property: base_property.base_rw_property[Optional[_ISV], _U],
@@ -88,8 +88,8 @@ class optional_indented_string_property(Generic[_ISV]):
         self._inner_type = inner_type
         self._indent_property = indent_property
 
-    def __get__(self, instance: _U, owner: Optional[Type[_U]] = None) -> Optional[str]:
-        s = self._inner_property.__get__(instance, owner)
+    def _get(self, instance: _U) -> Optional[str]:
+        s = self._inner_property.__get__(instance)
         return s.value if s is not None else None
     
     def __set__(self, instance: _U, value: Optional[str]) -> None:
@@ -102,13 +102,13 @@ class optional_indented_string_property(Generic[_ISV]):
             self._inner_property.__set__(instance, s)
 
 
-class optional_decimal_property(Generic[_U]):
+class optional_decimal_property(properties.base_rw_property[Optional[decimal.Decimal], _U]):
     def __init__(self, inner_property: base_property.base_rw_property[Optional[_DV], _U], inner_type: Type[_DV]):
         self._inner_property = inner_property
         self._inner_type = inner_type
 
-    def __get__(self, instance: _U, owner: Optional[Type[_U]] = None) -> Optional[decimal.Decimal]:
-        s = self._inner_property.__get__(instance, owner)
+    def _get(self, instance: _U) -> Optional[decimal.Decimal]:
+        s = self._inner_property.__get__(instance)
         return s.value if s is not None else None
     
     def __set__(self, instance: _U, value: Optional[decimal.Decimal]) -> None:
@@ -120,13 +120,13 @@ class optional_decimal_property(Generic[_U]):
             self._inner_property.__set__(instance, s)
 
 
-class optional_date_property(Generic[_U]):
+class optional_date_property(properties.base_rw_property[Optional[datetime.date], _U]):
     def __init__(self, inner_property: base_property.base_rw_property[Optional[_DateV], _U], inner_type: Type[_DateV]):
         self._inner_property = inner_property
         self._inner_type = inner_type
 
-    def __get__(self, instance: _U, owner: Optional[Type[_U]] = None) -> Optional[datetime.date]:
-        s = self._inner_property.__get__(instance, owner)
+    def _get(self, instance: _U) -> Optional[datetime.date]:
+        s = self._inner_property.__get__(instance)
         return s.value if s is not None else None
     
     def __set__(self, instance: _U, value: Optional[datetime.date]) -> None:
