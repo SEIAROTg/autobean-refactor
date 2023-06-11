@@ -36,7 +36,7 @@ def _find_spacing(
 class SpacingAccessorsMixin(base.RawModel):
 
     @property
-    def raw_spacing_before(self) -> tuple[base.RawTokenModel, ...]:
+    def raw_spacing_before(self) -> Sequence[base.RawTokenModel]:
         if self.token_store is None:
             return ()
         return tuple(reversed(_find_spacing(
@@ -44,7 +44,7 @@ class SpacingAccessorsMixin(base.RawModel):
                 self.token_store.get_prev)))
 
     @raw_spacing_before.setter
-    def raw_spacing_before(self, tokens: tuple[base.RawTokenModel, ...]) -> None:
+    def raw_spacing_before(self, tokens: Sequence[base.RawTokenModel]) -> None:
         if self.token_store is None:
             raise ValueError('Cannot set spacing without a token store.')
         current_tokens = self.raw_spacing_before

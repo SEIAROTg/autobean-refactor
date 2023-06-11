@@ -167,7 +167,7 @@ class TestSpacingAccessors(base.BaseTestModel):
     def test_update_reuse_token(self) -> None:
         file = self.parser.parse(_FILE_FOO, models.File)
         close_foo, close_bar, close_baz, close_qux = file.directives
-        close_foo.raw_spacing_before += (_N('\r\n'),)
+        close_foo.raw_spacing_before = (*close_foo.raw_spacing_before, _N('\r\n'))
         assert close_foo.spacing_before == '\n\n\r\n'
         close_foo.raw_spacing_after = close_foo.raw_spacing_after[:-2]
         assert close_foo.spacing_after == '\r\n    \n\n'
