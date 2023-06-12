@@ -5,6 +5,7 @@ from . import internal
 
 @internal.token_model
 class Date(internal.SingleValueRawTokenModel[datetime.date]):
+    """Date (e.g. `2000-01-01`)."""
     RULE = 'DATE'
 
     @classmethod

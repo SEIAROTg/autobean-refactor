@@ -11,18 +11,21 @@ from ..spacing import Whitespace
 
 @internal.token_model
 class LeftBrace(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `{`."""
     RULE = 'LEFT_BRACE'
     DEFAULT = '{'
 
 
 @internal.token_model
 class RightBrace(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `}`."""
     RULE = 'RIGHT_BRACE'
     DEFAULT = '}'
 
 
 @internal.tree_model
 class UnitCost(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Unit cost (e.g. `{10.00 USD}`)."""
     RULE = 'unit_cost'
     INLINE = True
 

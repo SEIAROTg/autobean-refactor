@@ -17,12 +17,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class PadLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `pad`."""
     RULE = 'PAD'
     DEFAULT = 'pad'
 
 
 @internal.tree_model
 class Pad(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Pad entry (e.g. `2000-01-01 pad Assets:Foo Equity:Opening-Balances`)."""
     RULE = 'pad'
 
     indent_by = internal.data_field[str]()

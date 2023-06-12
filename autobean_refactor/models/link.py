@@ -3,6 +3,7 @@ from . import internal
 
 @internal.token_model
 class Link(internal.SingleValueRawTokenModel[str]):
+    """Link (e.g. `^foo`)."""
     RULE = 'LINK'
 
     @classmethod

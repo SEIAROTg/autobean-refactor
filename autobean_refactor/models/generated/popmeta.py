@@ -13,12 +13,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class PopmetaLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `popmeta`."""
     RULE = 'POPMETA'
     DEFAULT = 'popmeta'
 
 
 @internal.tree_model
 class Popmeta(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Popmeta directive (e.g. `popmeta foo:`)."""
     RULE = 'popmeta'
 
     _label = internal.required_field[PopmetaLabel]()

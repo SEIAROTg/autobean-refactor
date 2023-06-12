@@ -19,6 +19,7 @@ from ..transaction_flag import TransactionFlag
 
 @internal.tree_model
 class Transaction(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Transaction entry (e.g. `2000-01-01 *`)."""
     RULE = 'transaction'
 
     indent_by = internal.data_field[str]()

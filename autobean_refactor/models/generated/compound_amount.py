@@ -12,12 +12,14 @@ from ..spacing import Whitespace
 
 @internal.token_model
 class Hash(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `#`."""
     RULE = 'HASH'
     DEFAULT = '#'
 
 
 @internal.tree_model
 class CompoundAmount(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Compound amount (e.g. `1.00 # 10.00 USD`)."""
     RULE = 'compound_amount'
     INLINE = True
 

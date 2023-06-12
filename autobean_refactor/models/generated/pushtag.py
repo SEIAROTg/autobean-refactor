@@ -13,12 +13,14 @@ from ..tag import Tag
 
 @internal.token_model
 class PushtagLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `pushtag`."""
     RULE = 'PUSHTAG'
     DEFAULT = 'pushtag'
 
 
 @internal.tree_model
 class Pushtag(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Pushtag directive (e.g. `pushtag #foo`)."""
     RULE = 'pushtag'
 
     _label = internal.required_field[PushtagLabel]()

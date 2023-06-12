@@ -17,12 +17,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class CloseLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `close`."""
     RULE = 'CLOSE'
     DEFAULT = 'close'
 
 
 @internal.tree_model
 class Close(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Close entry (e.g. `2000-01-01 close Assets:Foo`)."""
     RULE = 'close'
 
     indent_by = internal.data_field[str]()

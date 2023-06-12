@@ -3,6 +3,7 @@ from . import internal
 
 @internal.token_model
 class Tag(internal.SingleValueRawTokenModel[str]):
+    """Tag (e.g. `#foo`)."""
     RULE = 'TAG'
 
     @classmethod

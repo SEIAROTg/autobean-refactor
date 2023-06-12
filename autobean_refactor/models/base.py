@@ -38,6 +38,7 @@ class Formatter(Protocol):
 
 
 class RawModel(abc.ABC):
+    """Base class for all models."""
     RULE: ClassVar[str]
 
     @property
@@ -99,6 +100,7 @@ class RawModel(abc.ABC):
 
 
 class RawTokenModel(token_store_lib.Token, RawModel):
+    """Base class for all token models."""
     def __init__(self, raw_text: str) -> None:
         super().__init__(raw_text)
 
@@ -155,6 +157,7 @@ class RawTokenModel(token_store_lib.Token, RawModel):
 
 
 class RawTreeModel(RawModel):
+    """Base class for all tree models."""
     INLINE: ClassVar[bool] = False  # True iif this model contains no EOL
 
     def __init__(self, token_store: TokenStore) -> None:

@@ -32,6 +32,7 @@ Directive = Balance | Close | Commodity | Custom | Document | Event | IgnoredLin
 
 @internal.tree_model
 class File(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Contains everything in a file."""
     RULE = 'file'
 
     _directives = internal.repeated_field[Directive | BlockComment](separators=(Newline.from_default(), Newline.from_default()), separators_before=())

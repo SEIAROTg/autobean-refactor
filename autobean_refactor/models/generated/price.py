@@ -18,12 +18,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class PriceLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `price`."""
     RULE = 'PRICE'
     DEFAULT = 'price'
 
 
 @internal.tree_model
 class Price(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Price entry (e.g. `2000-01-01 price GBP 2.00 USD`)."""
     RULE = 'price'
 
     indent_by = internal.data_field[str]()

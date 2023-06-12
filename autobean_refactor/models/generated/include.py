@@ -13,12 +13,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class IncludeLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `include`."""
     RULE = 'INCLUDE'
     DEFAULT = 'include'
 
 
 @internal.tree_model
 class Include(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Include directive (e.g. `include "foo.bean"`)."""
     RULE = 'include'
 
     _label = internal.required_field[IncludeLabel]()

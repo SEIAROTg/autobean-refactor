@@ -12,12 +12,14 @@ from ..spacing import Whitespace
 
 @internal.token_model
 class At(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `@`."""
     RULE = 'AT'
     DEFAULT = '@'
 
 
 @internal.tree_model
 class UnitPrice(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Unit price (e.g. `@ 10.00 USD`)."""
     RULE = 'unit_price'
     INLINE = True
 

@@ -12,6 +12,7 @@ from ..spacing import Whitespace
 
 @internal.tree_model
 class Amount(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Amount (e.g. `100.00 USD`)."""
     RULE = 'amount'
     INLINE = True
 

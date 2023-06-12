@@ -9,6 +9,7 @@ from ..cost import TotalCost, UnitCost
 
 @internal.tree_model
 class CostSpec(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Unit cost or total cost."""
     RULE = 'cost_spec'
     INLINE = True
 

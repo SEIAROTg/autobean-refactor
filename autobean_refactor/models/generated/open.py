@@ -19,12 +19,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class OpenLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `open`."""
     RULE = 'OPEN'
     DEFAULT = 'open'
 
 
 @internal.tree_model
 class Open(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Open entry (e.g. `2000-01-01 open Assets:Foo`)."""
     RULE = 'open'
 
     indent_by = internal.data_field[str]()

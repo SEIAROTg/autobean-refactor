@@ -39,6 +39,7 @@ ${field.type_alias} = ${field.inner_type_original}
 @internal.token_model
 % if field.define_default is not None:
 class ${field.define_as}(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `${field.define_default}`."""
     RULE = '${next(iter(field.model_types)).rule}'
     DEFAULT = '${field.define_default}'
 % else:
@@ -56,6 +57,9 @@ if model.block_commentable:
 
 @internal.tree_model
 class ${model.name}(${', '.join(base_classes)}):
+% if model.docstring:
+    """${model.docstring}"""
+% endif
     RULE = '${model.rule}'
 % if model.inline:
     INLINE = ${model.inline}

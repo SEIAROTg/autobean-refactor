@@ -21,12 +21,14 @@ from ..tolerance import Tolerance
 
 @internal.token_model
 class BalanceLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `balance`."""
     RULE = 'BALANCE'
     DEFAULT = 'balance'
 
 
 @internal.tree_model
 class Balance(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Balance entry (e.g. `2000-01-01 balance Assets:Foo 100.00 USD`)."""
     RULE = 'balance'
 
     indent_by = internal.data_field[str]()

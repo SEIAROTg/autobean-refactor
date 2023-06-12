@@ -21,12 +21,14 @@ CustomRawValue = Account | Amount | Bool | Date | EscapedString | NumberExpr
 
 @internal.token_model
 class CustomLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `custom`."""
     RULE = 'CUSTOM'
     DEFAULT = 'custom'
 
 
 @internal.tree_model
 class Custom(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Custom entry (e.g. `2000-01-01 custom "foo" "bar"`)."""
     RULE = 'custom'
 
     indent_by = internal.data_field[str]()

@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 @internal.tree_model
 class NumberExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Number expression."""
     RULE = 'number_expr'
     INLINE = True
 

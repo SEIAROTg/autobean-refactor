@@ -17,12 +17,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class QueryLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `query`."""
     RULE = 'QUERY'
     DEFAULT = 'query'
 
 
 @internal.tree_model
 class Query(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Query entry (e.g. `2000-01-01 query "foo" "..."`)."""
     RULE = 'query'
 
     indent_by = internal.data_field[str]()

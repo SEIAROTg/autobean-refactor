@@ -240,6 +240,30 @@ def autodoc_process_signature(
     return (signature, return_annotation)
 
 
+def autodoc_process_docstring(
+        app: application.Sphinx,
+        what: str,
+        name: str,
+        obj: Any,
+        options: dict[str, Any],
+        lines: list[str],
+) -> None:
+    # autodoc_inherit_docstrings somehow doesn't work
+    if not lines and isinstance(obj, type):
+        for cls in obj.__mro__:
+            if cls.__name__ != obj.__name__:
+                break
+            if cls.__doc__:
+                lines[:] = cls.__doc__.splitlines()
+                break
+
+    for i in range(len(lines)):
+        # convert codeblock to sphinx style
+        lines[i] = lines[i].replace('`', '``')
+        # autosummary thinks the last dot in "e.g." is a period
+        lines[i] = lines[i].replace('e.g. ', 'e.g.\u200b ')
+
+
 class _BaseStaticDirective(docutils.SphinxDirective):
     has_content = True
     STATIC_CONTENTS: ClassVar[list[str]]
@@ -315,6 +339,7 @@ def setup(app: application.Sphinx) -> None:
     app.add_autodocumenter(PropertyDocumenter)
     app.connect('autodoc-skip-member', autodoc_skip_member)
     app.connect('autodoc-process-signature', autodoc_process_signature)
+    app.connect('autodoc-process-docstring', autodoc_process_docstring)
 
     app.add_directive('autobean-refactor-type-aliases', ListTypeAliasesDirective)
     app.add_directive('autobean-refactor-token-models', ListTokenModelsDirective)

@@ -14,12 +14,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class PushmetaLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `pushmeta`."""
     RULE = 'PUSHMETA'
     DEFAULT = 'pushmeta'
 
 
 @internal.tree_model
 class Pushmeta(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Pushmeta directive (e.g. `pushmeta foo: "bar"`)."""
     RULE = 'pushmeta'
 
     _label = internal.required_field[PushmetaLabel]()

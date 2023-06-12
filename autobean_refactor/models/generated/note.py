@@ -18,12 +18,14 @@ from ..tag import Tag
 
 @internal.token_model
 class NoteLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `note`."""
     RULE = 'NOTE'
     DEFAULT = 'note'
 
 
 @internal.tree_model
 class Note(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Note entry (e.g. `2000-01-01 note Assets:Foo "foo"`)."""
     RULE = 'note'
 
     indent_by = internal.data_field[str]()

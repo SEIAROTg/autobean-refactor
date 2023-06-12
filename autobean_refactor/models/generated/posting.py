@@ -24,6 +24,7 @@ PriceAnnotation = TotalPrice | UnitPrice
 
 @internal.tree_model
 class Posting(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Posting (e.g. `Assets:Foo -10.00 USD`)."""
     RULE = 'posting'
 
     indent_by = internal.data_field[str]()

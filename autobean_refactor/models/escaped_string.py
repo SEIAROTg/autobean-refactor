@@ -4,6 +4,7 @@ from . import internal
 
 @internal.token_model
 class EscapedString(internal.SingleValueRawTokenModel[str]):
+    """String (e.g. `"foo"`)."""
     RULE = 'ESCAPED_STRING'
     # See: https://github.com/beancount/beancount/blob/d841487ccdda04c159de86b1186e7c2ea997a3e2/beancount/parser/tokens.c#L102
     __ESCAPE_MAP = {

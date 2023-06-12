@@ -3,6 +3,7 @@ from . import internal
 
 @internal.token_model
 class InlineComment(internal.SingleValueRawTokenModel[str]):
+    """Comment that does not occupies a whole line."""
     RULE = 'INLINE_COMMENT'
 
     @classmethod

@@ -4,6 +4,7 @@ from . import internal
 
 @internal.token_model
 class Number(internal.SingleValueRawTokenModel[decimal.Decimal]):
+    """Number (e.g. `42.00`)."""
     RULE = 'NUMBER'
 
     @classmethod

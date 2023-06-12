@@ -18,12 +18,14 @@ from ..tag import Tag
 
 @internal.token_model
 class DocumentLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `document`."""
     RULE = 'DOCUMENT'
     DEFAULT = 'document'
 
 
 @internal.tree_model
 class Document(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Document entry (e.g. `2000-01-01 balance Assets:Foo "foo.pdf"`)."""
     RULE = 'document'
 
     indent_by = internal.data_field[str]()

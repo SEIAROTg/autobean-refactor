@@ -31,3 +31,4 @@ sphinx:
     templates_path:
     - '_templates'
     autodoc_class_signature: separated
+    autodoc_inherit_docstrings: false

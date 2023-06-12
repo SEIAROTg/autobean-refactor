@@ -14,6 +14,7 @@ from ..spacing import Newline, Whitespace
 
 @internal.tree_model
 class MetaItem(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Meta item (e.g. `foo: "bar"`)."""
     RULE = 'meta_item'
 
     _indent = internal.required_field[Indent]()

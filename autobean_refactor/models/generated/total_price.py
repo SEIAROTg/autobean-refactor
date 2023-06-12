@@ -12,12 +12,14 @@ from ..spacing import Whitespace
 
 @internal.token_model
 class AtAt(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `@@`."""
     RULE = 'ATAT'
     DEFAULT = '@@'
 
 
 @internal.tree_model
 class TotalPrice(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Total price (e.g. `@@ 10.00 USD`)."""
     RULE = 'total_price'
     INLINE = True
 

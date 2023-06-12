@@ -3,6 +3,7 @@ from . import internal
 
 @internal.token_model
 class TransactionFlag(internal.SingleValueRawTokenModel[str]):
+    """Transaction flag (e.g. `*`)."""
     RULE = 'TRANSACTION_FLAG'
 
     @classmethod

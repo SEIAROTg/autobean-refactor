@@ -17,12 +17,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class CommodityLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `commodity`."""
     RULE = 'COMMODITY'
     DEFAULT = 'commodity'
 
 
 @internal.tree_model
 class Commodity(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Commodity entry (e.g. `2000-01-01 commodity USD`)."""
     RULE = 'commodity'
 
     indent_by = internal.data_field[str]()

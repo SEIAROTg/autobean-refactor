@@ -10,18 +10,21 @@ if TYPE_CHECKING:
 
 @internal.token_model
 class LeftParen(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `(`."""
     RULE = 'LEFT_PAREN'
     DEFAULT = '('
 
 
 @internal.token_model
 class RightParen(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `)`."""
     RULE = 'RIGHT_PAREN'
     DEFAULT = ')'
 
 
 @internal.tree_model
 class NumberParenExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Parentheses-enclosed number expression (e.g. `(42.00)`)."""
     RULE = 'number_paren_expr'
     INLINE = True
 

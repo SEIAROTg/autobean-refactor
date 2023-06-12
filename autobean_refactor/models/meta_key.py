@@ -3,6 +3,7 @@ from . import internal
 
 @internal.token_model
 class MetaKey(internal.SingleValueRawTokenModel[str]):
+    """Meta key (e.g. `foo:`)."""
     RULE = 'META_KEY'
 
     @classmethod

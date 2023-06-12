@@ -3,6 +3,7 @@ from . import internal
 
 @internal.token_model
 class Bool(internal.SingleValueRawTokenModel[bool]):
+    """Boolean value. Contains literal `TRUE` or `FALSE`."""
     RULE = 'BOOL'
 
     @classmethod

@@ -11,12 +11,14 @@ from ..spacing import Whitespace
 
 @internal.token_model
 class Tilde(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `~`."""
     RULE = 'TILDE'
     DEFAULT = '~'
 
 
 @internal.tree_model
 class Tolerance(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Tolerance (e.g. `~ 0.01`)."""
     RULE = 'tolerance'
     INLINE = True
 

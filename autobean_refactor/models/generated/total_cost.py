@@ -11,18 +11,21 @@ from ..spacing import Whitespace
 
 @internal.token_model
 class DblLeftBrace(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `{{`."""
     RULE = 'DBL_LEFT_BRACE'
     DEFAULT = '{{'
 
 
 @internal.token_model
 class DblRightBrace(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `}}`."""
     RULE = 'DBL_RIGHT_BRACE'
     DEFAULT = '}}'
 
 
 @internal.tree_model
 class TotalCost(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Total cost (e.g. `{{10.00 USD}}`)."""
     RULE = 'total_cost'
     INLINE = True
 

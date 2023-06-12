@@ -15,6 +15,7 @@ def _splitlines(s: str) -> list[str]:
 
 @_registry.token_model
 class BlockComment(base.RawTokenModel, _value_properties.RWValueWithIndent[str], _spacing_accessors.SpacingAccessorsMixin):
+    """Comment that occupies one or more whole lines."""
     RULE = 'BLOCK_COMMENT'
 
     @final

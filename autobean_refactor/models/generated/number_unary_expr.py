@@ -15,6 +15,7 @@ class UnaryOp(internal.SimpleRawTokenModel):
 
 @internal.tree_model
 class NumberUnaryExpr(base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Unary number expression (e.g. `-42.00`)."""
     RULE = 'number_unary_expr'
     INLINE = True
 

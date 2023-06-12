@@ -17,12 +17,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class EventLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `event`."""
     RULE = 'EVENT'
     DEFAULT = 'event'
 
 
 @internal.tree_model
 class Event(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Event entry (e.g. `2000-01-01 event "foo" "bar"`)."""
     RULE = 'event'
 
     indent_by = internal.data_field[str]()

@@ -13,12 +13,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class OptionLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `option`."""
     RULE = 'OPTION'
     DEFAULT = 'option'
 
 
 @internal.tree_model
 class Option(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Option directive (e.g. `option "title" "foo"`)."""
     RULE = 'option'
 
     _label = internal.required_field[OptionLabel]()

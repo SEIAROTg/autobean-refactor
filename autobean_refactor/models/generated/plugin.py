@@ -13,12 +13,14 @@ from ..spacing import Newline, Whitespace
 
 @internal.token_model
 class PluginLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `plugin`."""
     RULE = 'PLUGIN'
     DEFAULT = 'plugin'
 
 
 @internal.tree_model
 class Plugin(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Plugin directive (e.g. `plugin "foo"`)."""
     RULE = 'plugin'
 
     _label = internal.required_field[PluginLabel]()

@@ -13,12 +13,14 @@ from ..tag import Tag
 
 @internal.token_model
 class PoptagLabel(internal.SimpleDefaultRawTokenModel):
+    """Contains literal `poptag`."""
     RULE = 'POPTAG'
     DEFAULT = 'poptag'
 
 
 @internal.tree_model
 class Poptag(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
+    """Poptag directive (e.g. `poptag #foo`)."""
     RULE = 'poptag'
 
     _label = internal.required_field[PoptagLabel]()

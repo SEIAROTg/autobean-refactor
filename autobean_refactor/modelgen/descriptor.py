@@ -390,6 +390,7 @@ class FieldDescriptor:
 @dataclasses.dataclass
 class MetaModelDescriptor:
     name: str
+    docstring: Optional[str]
     rule: str
     block_commentable: bool
     has_indented_children: bool
@@ -608,6 +609,7 @@ def build_descriptor(meta_model: Type[base.MetaModel]) -> MetaModelDescriptor:
     inline = issubclass(meta_model, base.Inline)
     return MetaModelDescriptor(
         name=meta_model.__name__,
+        docstring=meta_model.__doc__,
         rule=stringcase.snakecase(meta_model.__name__),
         block_commentable=block_commentable,
         has_indented_children=has_indented_children,
