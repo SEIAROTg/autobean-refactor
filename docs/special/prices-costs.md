@@ -17,7 +17,7 @@ One limitation of the official beancount data model is that the distinction of t
 
 ## Basic access
 
-Fortunately, `autobean-refactor` does not have the same issue. In `autobean-refactor`, there are {py:class}`UnitPrice`, {py:class}`TotalPrice`, {py:class}`UnitCost`, and {py:class}`TotalCost`. The `Unit-` and `Total-` versions are almost identical except being different type, allowing case distinction.
+Fortunately, `autobean-refactor` does not have the same issue. In `autobean-refactor`, there are {py:class}`UnitPrice <autobean_refactor.models.UnitPrice>`, {py:class}`TotalPrice <autobean_refactor.models.TotalPrice>`, {py:class}`UnitCost <autobean_refactor.models.UnitCost>`, and {py:class}`TotalCost <autobean_refactor.models.TotalCost>`. The `Unit-` and `Total-` versions are almost identical except being different type, allowing case distinction.
 
 ## Price access
 

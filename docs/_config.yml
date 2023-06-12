@@ -15,8 +15,19 @@ html:
 
 sphinx:
   extra_extensions:
+  - 'sphinx.ext.autodoc'
+  - 'sphinx.ext.autosummary'
+  - 'sphinx.ext.napoleon'
   - 'sphinx.ext.intersphinx'
+  - 'sphinx.ext.viewcode'
+  local_extensions:
+    # Ideally `local: '_extensions/'` but that doesn't work with `jupyter-book config`
+    '_extensions.local': './'
   config:
     myst_heading_anchors: 2
     intersphinx_mapping:
       python: ['https://docs.python.org/3', null]
+    add_module_names: false
+    templates_path:
+    - '_templates'
+    autodoc_class_signature: separated

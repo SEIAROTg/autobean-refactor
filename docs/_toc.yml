@@ -18,3 +18,8 @@ parts:
   - file: special/comments
   - file: special/spacing
   - file: special/indents
+- caption: References
+  chapters:
+  - file: references/token-models
+  - file: references/tree-models
+  - file: references/type-aliases

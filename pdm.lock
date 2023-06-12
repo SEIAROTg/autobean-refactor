@@ -2,14 +2,6 @@
 # It is not intended for manual editing.
 
 [[package]]
-name = "accessible-pygments"
-version = "0.0.4"
-summary = "A collection of accessible pygments styles"
-dependencies = [
-    "pygments>=1.5",
-]
-
-[[package]]
 name = "alabaster"
 version = "0.7.13"
 requires_python = ">=3.6"
@@ -252,7 +244,7 @@ dependencies = [
 
 [[package]]
 name = "jupyter-book"
-version = "0.15.1"
+version = "0.14.0"
 requires_python = ">=3.7"
 summary = "Build a book with Jupyter Notebooks and Sphinx."
 dependencies = [
@@ -263,7 +255,7 @@ dependencies = [
     "linkify-it-py~=2.0.0",
     "myst-nb~=0.17.1",
     "pyyaml",
-    "sphinx-book-theme~=1.0.0",
+    "sphinx-book-theme==0.4.0rc1",
     "sphinx-comments",
     "sphinx-copybutton",
     "sphinx-design~=0.3.0",
@@ -563,18 +555,15 @@ summary = "C parser in Python"
 
 [[package]]
 name = "pydata-sphinx-theme"
-version = "0.13.3"
+version = "0.12.0"
 requires_python = ">=3.7"
 summary = "Bootstrap-based Sphinx theme from the PyData community"
 dependencies = [
-    "Babel",
-    "accessible-pygments",
     "beautifulsoup4",
     "docutils!=0.17.0",
     "packaging",
     "pygments>=2.7",
     "sphinx>=4.2",
-    "typing-extensions",
 ]
 
 [[package]]
@@ -714,12 +703,13 @@ dependencies = [
 
 [[package]]
 name = "sphinx-book-theme"
-version = "1.0.1"
+version = "0.4.0rc1"
 requires_python = ">=3.7"
 summary = "A clean book theme for scientific explanations and documentation with Sphinx"
 dependencies = [
-    "pydata-sphinx-theme>=0.13.3",
-    "sphinx<7,>=4",
+    "pydata-sphinx-theme~=0.12.0",
+    "pyyaml",
+    "sphinx<6,>=4",
 ]
 
 [[package]]
@@ -893,6 +883,11 @@ requires_python = ">=3.7"
 summary = "Traitlets Python configuration system"
 
 [[package]]
+name = "types-docutils"
+version = "0.20.0.1"
+summary = "Typing stubs for docutils"
+
+[[package]]
 name = "typing-extensions"
 version = "4.4.0"
 requires_python = ">=3.7"
@@ -931,13 +926,9 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 lock_version = "4.2"
 cross_platform = true
 groups = ["default", "dev"]
-content_hash = "sha256:7c185889db79a08087b54e9dc759c6bc04b77bf19d2ddee8d8f4bb9b4b7bd3f7"
+content_hash = "sha256:9b739ddf92977269a0eb71908ad5b3ee7521ea4777bc1c71af8e5958136ccb2d"
 
 [metadata.files]
-"accessible-pygments 0.0.4" = [
-    {url = "https://files.pythonhosted.org/packages/20/d7/45cfa326d945e411c7e02764206845b05f8f5766aa7ebc812ef3bc4138cd/accessible_pygments-0.0.4-py2.py3-none-any.whl", hash = "sha256:416c6d8c1ea1c5ad8701903a20fcedf953c6e720d64f33dc47bfb2d3f2fa4e8d"},
-    {url = "https://files.pythonhosted.org/packages/b2/50/7055ebd9b7928eca202768bcf5f8f69d8d69dec1767c956c08f055c5b31e/accessible-pygments-0.0.4.tar.gz", hash = "sha256:e7b57a9b15958e9601c7e9eb07a440c813283545a20973f2574a5f453d0e953e"},
-]
 "alabaster 0.7.13" = [
     {url = "https://files.pythonhosted.org/packages/64/88/c7083fc61120ab661c5d0b82cb77079fc1429d3f913a456c1c82cf4658f7/alabaster-0.7.13-py3-none-any.whl", hash = "sha256:1ee19aca801bbabb5ba3f5f258e4422dfa86f82f3e9cefb0859b283cdd7f62a3"},
     {url = "https://files.pythonhosted.org/packages/94/71/a8ee96d1fd95ca04a0d2e2d9c4081dac4c2d2b12f7ddb899c8cb9bfd1532/alabaster-0.7.13.tar.gz", hash = "sha256:a27a4a084d5e690e16e01e03ad2b2e552c61a65469419b907243193de1a84ae2"},
@@ -1315,9 +1306,9 @@ content_hash = "sha256:7c185889db79a08087b54e9dc759c6bc04b77bf19d2ddee8d8f4bb9b4
     {url = "https://files.pythonhosted.org/packages/36/3d/ca032d5ac064dff543aa13c984737795ac81abc9fb130cd2fcff17cfabc7/jsonschema-4.17.3.tar.gz", hash = "sha256:0f864437ab8b6076ba6707453ef8f98a6a0d512a80e93f8abdb676f737ecb60d"},
     {url = "https://files.pythonhosted.org/packages/c1/97/c698bd9350f307daad79dd740806e1a59becd693bd11443a0f531e3229b3/jsonschema-4.17.3-py3-none-any.whl", hash = "sha256:a870ad254da1a8ca84b6a2905cac29d265f805acc57af304784962a2aa6508f6"},
 ]
-"jupyter-book 0.15.1" = [
-    {url = "https://files.pythonhosted.org/packages/ab/ef/c56470847067fd6d4c059265543188c63b56d01aa2107b18895404f82a9c/jupyter_book-0.15.1-py3-none-any.whl", hash = "sha256:7671264952abd1ca3f5e713b03e138dda710c92a985c49154f398817fe089968"},
-    {url = "https://files.pythonhosted.org/packages/b3/1a/e38481ea2cd9988234eeee4dd21bec64f235c78004797e48643592018490/jupyter-book-0.15.1.tar.gz", hash = "sha256:8a1634ec16f7eedee0d116f1e5fb7c48203289ad92da42e09519dc71d956c010"},
+"jupyter-book 0.14.0" = [
+    {url = "https://files.pythonhosted.org/packages/3c/24/1bc5c57513b5182d36b23bb20629adcb706aaf2e949b77d58334d5fb69f6/jupyter-book-0.14.0.tar.gz", hash = "sha256:071ad5aceb02a85466c75ea5e987642699707675365e14453077790c6cbe76a1"},
+    {url = "https://files.pythonhosted.org/packages/a5/88/400424520665330806499511d348fc632ae2455dc3dfb62538bd50318e3d/jupyter_book-0.14.0-py3-none-any.whl", hash = "sha256:2a6e307185d7d951210199405575903f42b7918caa8dc8861d7c48dde28cd9df"},
 ]
 "jupyter-cache 0.6.1" = [
     {url = "https://files.pythonhosted.org/packages/69/64/08dcc1f6fc54a263525edd23b5d2754793470c1c41a8dd82d52406f8d876/jupyter-cache-0.6.1.tar.gz", hash = "sha256:26f83901143edf4af2f3ff5a91e2d2ad298e46e2cee03c8071d37a23a63ccbfc"},
@@ -1525,9 +1516,9 @@ content_hash = "sha256:7c185889db79a08087b54e9dc759c6bc04b77bf19d2ddee8d8f4bb9b4
     {url = "https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz", hash = "sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"},
     {url = "https://files.pythonhosted.org/packages/62/d5/5f610ebe421e85889f2e55e33b7f9a6795bd982198517d912eb1c76e1a53/pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
 ]
-"pydata-sphinx-theme 0.13.3" = [
-    {url = "https://files.pythonhosted.org/packages/b1/ed/d6e38e05aed6baca375b29d2943f60b5a8e7b528cac711c2535d3521d913/pydata_sphinx_theme-0.13.3.tar.gz", hash = "sha256:827f16b065c4fd97e847c11c108bf632b7f2ff53a3bca3272f63f3f3ff782ecc"},
-    {url = "https://files.pythonhosted.org/packages/d2/61/1802ddf553af5850c2c3b6c183c6a3bdfc1145cec9873b56cac107291036/pydata_sphinx_theme-0.13.3-py3-none-any.whl", hash = "sha256:bf41ca6c1c6216e929e28834e404bfc90e080b51915bbe7563b5e6fda70354f0"},
+"pydata-sphinx-theme 0.12.0" = [
+    {url = "https://files.pythonhosted.org/packages/49/6c/9b54482c3ed5910c4643a334edb18b61e9ecb406e8b26bcd5cee4333c37b/pydata_sphinx_theme-0.12.0-py3-none-any.whl", hash = "sha256:c17dbab67a3774f06f34f6378e896fcd0668cc8b5da1c1ba017e65cf1df0af58"},
+    {url = "https://files.pythonhosted.org/packages/93/1d/ba3fde97da9027881fa8a83be89a9d2a7186abcd35f848112edc5e8ba558/pydata_sphinx_theme-0.12.0.tar.gz", hash = "sha256:7a07c3ac1fb1cfbb5f7d1e147a9500fb120e329d610e0fa2caac4a645141bdd9"},
 ]
 "pygments 2.15.1" = [
     {url = "https://files.pythonhosted.org/packages/34/a7/37c8d68532ba71549db4212cb036dbd6161b40e463aba336770e80c72f84/Pygments-2.15.1-py3-none-any.whl", hash = "sha256:db2db3deb4b4179f399a09054b023b6a586b76499d36965813c71aa8ed7b5fd1"},
@@ -1739,9 +1730,9 @@ content_hash = "sha256:7c185889db79a08087b54e9dc759c6bc04b77bf19d2ddee8d8f4bb9b4
     {url = "https://files.pythonhosted.org/packages/83/5f/0ebf0c94dffd7a848ebfeafc0d3147a784afffb44e2c6fcaeab7eadd67ad/Sphinx-5.0.2.tar.gz", hash = "sha256:b18e978ea7565720f26019c702cd85c84376e948370f1cd43d60265010e1c7b0"},
     {url = "https://files.pythonhosted.org/packages/fd/a2/3139e82a7caa2fb6954d0e63db206cc60e0ad6c67ae61ef9cf87dc70ade1/Sphinx-5.0.2-py3-none-any.whl", hash = "sha256:d3e57663eed1d7c5c50895d191fdeda0b54ded6f44d5621b50709466c338d1e8"},
 ]
-"sphinx-book-theme 1.0.1" = [
-    {url = "https://files.pythonhosted.org/packages/8e/45/3abe359075154f4d6a8626f4b591a28cc703d7c169cef1f7b87cab1a62f7/sphinx_book_theme-1.0.1-py3-none-any.whl", hash = "sha256:d15f8248b3718a9a6be0ba617a32d1591f9fa39c614469bface777ba06a73b75"},
-    {url = "https://files.pythonhosted.org/packages/be/3d/81b2d643d456e3d1bf9069836af7cc32c71e7efaa14faa5858100c9241d7/sphinx_book_theme-1.0.1.tar.gz", hash = "sha256:927b399a6906be067e49c11ef1a87472f1b1964075c9eea30fb82c64b20aedee"},
+"sphinx-book-theme 0.4.0rc1" = [
+    {url = "https://files.pythonhosted.org/packages/67/64/0d9240a5b94da087f80cb24d628cbc760b1e5039204b26070e8841996840/sphinx_book_theme-0.4.0rc1.tar.gz", hash = "sha256:00a312d5287c497b1f189a0d2aac3954216e60b5dee1e07454e4b674d7c9d3ca"},
+    {url = "https://files.pythonhosted.org/packages/87/37/367584106218f61d440d696fc7e66704538b160a9746a016e590d5bb34c2/sphinx_book_theme-0.4.0rc1-py3-none-any.whl", hash = "sha256:bfad8ef469885da5633f7cf7f8cd9a0ae11ea2351a91e507b44cf15973934512"},
 ]
 "sphinx-comments 0.0.3" = [
     {url = "https://files.pythonhosted.org/packages/26/97/a5c39f619375d4f81d5422377fb027075898efa6b6202c1ccf1e5bb38a32/sphinx_comments-0.0.3-py3-none-any.whl", hash = "sha256:1e879b4e9bfa641467f83e3441ac4629225fc57c29995177d043252530c21d00"},
@@ -1877,6 +1868,10 @@ content_hash = "sha256:7c185889db79a08087b54e9dc759c6bc04b77bf19d2ddee8d8f4bb9b4
 "traitlets 5.9.0" = [
     {url = "https://files.pythonhosted.org/packages/39/c3/205e88f02959712b62008502952707313640369144a7fded4cbc61f48321/traitlets-5.9.0.tar.gz", hash = "sha256:f6cde21a9c68cf756af02035f72d5a723bf607e862e7be33ece505abf4a3bad9"},
     {url = "https://files.pythonhosted.org/packages/77/75/c28e9ef7abec2b7e9ff35aea3e0be6c1aceaf7873c26c95ae1f0d594de71/traitlets-5.9.0-py3-none-any.whl", hash = "sha256:9e6ec080259b9a5940c797d58b613b5e31441c2257b87c2e795c5228ae80d2d8"},
+]
+"types-docutils 0.20.0.1" = [
+    {url = "https://files.pythonhosted.org/packages/16/cd/2c722b562282bfef2a34da3f7497be3b13defb8c2d994f30514f3423af5e/types-docutils-0.20.0.1.tar.gz", hash = "sha256:f682b5459a1e6e28208742adb0be8573d1ecbddd442f00d202b0278c1c4418a2"},
+    {url = "https://files.pythonhosted.org/packages/7d/ef/dc298dd88979292ea2093c2d9393c3a64ce0e85dcb8bd57d42ad64b58035/types_docutils-0.20.0.1-py3-none-any.whl", hash = "sha256:6b17cbe57cb282158feb41d154cddaeabc16f1d6cff3c7308bd3056f42aa7cd2"},
 ]
 "typing-extensions 4.4.0" = [
     {url = "https://files.pythonhosted.org/packages/0b/8e/f1a0a5a76cfef77e1eb6004cb49e5f8d72634da638420b9ea492ce8305e8/typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},

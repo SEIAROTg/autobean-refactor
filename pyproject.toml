@@ -36,5 +36,11 @@ dev = [
     "pytest-benchmark>=4.0.0",
     "mako>=1.2.4",
     "stringcase>=1.2.0",
-    "jupyter-book>=0.15.1",
+    # Limit version of sphinx-book-theme so I can specify template_path.
+    # https://github.com/executablebooks/sphinx-book-theme/issues/719#issuecomment-1514498494
+    "sphinx-book-theme>=0.3.3,<1.0.0",
+    # Limit version of jupyter-book so I can lower the version of sphinx-book-theme.
+    "jupyter-book>=0.14.0,<0.15.0",
+    "docutils>=0.18.1",
+    "types-docutils>=0.20.0.1",
 ]

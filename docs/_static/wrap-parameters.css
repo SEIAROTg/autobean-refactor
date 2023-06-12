@@ -1,0 +1,25 @@
+.sig {
+    padding-left: 4rem;
+}
+
+.sig>:first-child {
+    margin-left: -4rem;
+}
+
+.sig-param::before {
+    content: "\a";
+    white-space: pre;
+}
+
+.sig>.sig-param:last-of-type::after {
+    content: ",\a";
+    white-space: pre;
+}
+
+.sig-param+.sig-paren {
+    margin-left: -4rem;
+}
+
+.sig-param>:first-child {
+    margin-left: -2rem;
+}

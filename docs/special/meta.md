@@ -12,9 +12,9 @@ jupytext:
 ```
 
 For models that could carry meta, they are accessible through three attributes:
-* `raw_meta_with_comments`: {py:class}`MutableSequence[MetaItem | BlockComment] <collections.abc.MutableSequence>`, providing by-index access to {py:class}`MetaItem` and [](../special/comments.md#standalone-comments).
-* `raw_meta`: {py:class}`MutableSequence[MetaItem] <collections.abc.MutableSequence>` and {py:class}`MutableMapping[str, MetaItem] <collections.abc.MutableMapping>`, providing by-index and by-key access to {py:class}`MetaItem`.
-* `meta`: {py:class}`MutableSequence[MetaItem] <collections.abc.MutableSequence>` and {py:class}`MutableMapping[str, MetaValue | MetaRawValue] <collections.abc.MutableMapping>`, providing by-index access to {py:class}`MetaItem` and by-key access to {py:class}`MetaValue`.
+* `raw_meta_with_comments`: {py:class}`MutableSequence[MetaItem | BlockComment] <collections.abc.MutableSequence>`, providing by-index access to {py:class}`MetaItem <autobean_refactor.models.MetaItem>` and [](../special/comments.md#standalone-comments).
+* `raw_meta`: {py:class}`MutableSequence[MetaItem] <collections.abc.MutableSequence>` and {py:class}`MutableMapping[str, MetaItem] <collections.abc.MutableMapping>`, providing by-index and by-key access to {py:class}`MetaItem <autobean_refactor.models.MetaItem>`.
+* `meta`: {py:class}`MutableSequence[MetaItem] <collections.abc.MutableSequence>` and {py:class}`MutableMapping[str, MetaValue | MetaRawValue] <collections.abc.MutableMapping>`, providing by-index access to {py:class}`MetaItem <autobean_refactor.models.MetaItem>` and by-key access to {py:class}`MetaValue <autobean_refactor.models.MetaValue>`.
 
 ```{code-cell} python
 :tags: [remove-output]
