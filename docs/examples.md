@@ -8,7 +8,7 @@ jupytext:
 
 ```{code-cell} python
 :load: ./code/basics.py
-:tags: [remove-cell]
+:tags: [hide-input, remove-output]
 ```
 
 ## Rename accounts
