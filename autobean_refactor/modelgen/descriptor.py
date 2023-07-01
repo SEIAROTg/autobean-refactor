@@ -5,7 +5,7 @@ import functools
 import inspect
 import itertools
 import pathlib
-from typing import Any, ForwardRef, Iterable, Optional, Type, Union, get_args, get_origin
+from typing import Any, ForwardRef, Iterable, Iterator, Optional, Type, Union, get_args, get_origin
 from lark import load_grammar
 from lark import lexer
 from lark import grammar
@@ -471,6 +471,7 @@ class MetaModelDescriptor:
             current_field: Optional[FieldDescriptor],
             floating: FieldCardinality,
     ) -> Optional[str]:
+        it: Iterator[FieldDescriptor]
         if floating == base.Floating.RIGHT:
             it = iter(self.fields)
             border_prop = 'first_token'
