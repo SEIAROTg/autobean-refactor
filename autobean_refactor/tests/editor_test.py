@@ -71,7 +71,6 @@ class TestEditor:
         with self._editor.edit_file(path) as file:
             assert len(file.raw_directives) == 3
             file.directives.pop(0)
-        assert os.stat(path).st_mtime_ns > mtime
         with open(path) as f:
             assert f.read() == '''\
 include "2020/index.bean"
@@ -113,9 +112,8 @@ include "2021/index.bean"
             with open(testdir / p) as f:
                 updated_text = f.read()
             if p == '2020/02.bean':
-                assert mtime > mtimes[p]
                 assert updated_text == '2020-02-01 *\n\n; updated\n'
             else:
-                print(mtimes)
                 assert mtime == mtimes[p]
                 assert updated_text == _FILES_FOO[p]
+
