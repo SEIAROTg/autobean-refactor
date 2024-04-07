@@ -3,6 +3,7 @@ import contextlib
 import glob
 import io
 import os.path
+import pathlib
 from typing import Iterator, Optional
 from autobean_refactor import parser as parser_lib, models, printer
 
@@ -26,16 +27,15 @@ class Editor:
 
     @contextlib.contextmanager
     def edit_file(self, path: os.PathLike) -> Iterator[models.File]:
-        with open(path) as f:
-            text = f.read()
+        p = pathlib.Path(path)
+        text = p.read_text()
         file = self._parser.parse(text, models.File)
 
         yield file
 
         updated_text = printer.print_model(file, io.StringIO()).getvalue()
         if updated_text != text:
-            with open(path, 'w') as f:
-                f.write(updated_text)
+            p.write_text(updated_text)
 
     @contextlib.contextmanager
     def edit_file_recursive(self, path: os.PathLike) -> Iterator[dict[str, models.File]]:
@@ -57,7 +57,8 @@ class Editor:
         for current_path in set(texts) - set(files):
             os.unlink(current_path)
         for current_path, file in files.items():
+            os.makedirs(os.path.dirname(current_path), exist_ok=True)
             updated_text = printer.print_model(file, io.StringIO()).getvalue()
-            if updated_text != texts[current_path]:
+            if updated_text != texts.get(current_path):
                 with open(current_path, 'w') as f:
                     f.write(updated_text)
