@@ -10,8 +10,7 @@ from autobean_refactor.modelgen import descriptor
 
 
 _CURRENT_DIR = pathlib.Path(__file__).parent
-with open(_CURRENT_DIR / 'raw_model.mako') as f:
-    _RAW_MODEL_TMPL = mako.template.Template(f.read())
+_RAW_MODEL_TMPL = mako.template.Template((_CURRENT_DIR / 'raw_model.mako').read_text())
 
 
 def collect_meta_models() -> list[Type[MetaModel]]:
@@ -26,9 +25,9 @@ def generate_raw_models(meta_model: Type[MetaModel]) -> str:
     return _RAW_MODEL_TMPL.render(model=descriptor.build_descriptor(meta_model))
 
 
-def raw_model_path(meta_model: Type[MetaModel]) -> str:
+def raw_model_path(meta_model: Type[MetaModel]) -> pathlib.Path:
     filename = f'{stringcase.snakecase(meta_model.__name__)}.py'
-    return str(_CURRENT_DIR / '..' / 'models' / 'generated' / filename)
+    return _CURRENT_DIR / '..' / 'models' / 'generated' / filename
 
 
 if __name__ == '__main__':
@@ -37,8 +36,7 @@ if __name__ == '__main__':
     generated = 0
     for meta_model in all_meta_models:
         if target == 'all' or target == meta_model.__name__:
-            with open(raw_model_path(meta_model), 'w') as f:
-                f.write(generate_raw_models(meta_model))
+            raw_model_path(meta_model).write_text(generate_raw_models(meta_model))
             print(f'Generated {meta_model.__name__}.')
             generated += 1
     print(f'Generated {generated} models.')

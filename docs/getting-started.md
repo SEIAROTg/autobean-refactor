@@ -32,23 +32,19 @@ printer.print_model(file, io.StringIO()).getvalue()
 ## In-place editing
 
 ```{code-cell}python
-import os.path
 import pathlib
 import tempfile
-from autobean_refactor import editor
+from autobean_refactor import editor, models
 
 e = editor.Editor()
 
 with tempfile.TemporaryDirectory() as tmpdir:
-    p = pathlib.PurePath(tmpdir)
+    p = pathlib.Path(tmpdir)
 
     # creates some files
-    with open(p / 'index.bean', 'w') as f:
-        f.write('include "??.bean"')
-    with open(p / '01.bean', 'w') as f:
-        f.write('2000-01-01 *')
-    with open(p / '02.bean', 'w') as f:
-        f.write('2000-01-01 *')
+    (p / 'index.bean').write_text('include "??.bean"')
+    (p / '01.bean').write_text('2000-01-01 *')
+    (p / '02.bean').write_text('2000-01-01 *')
 
     # edits a single file
     with e.edit_file(p / '01.bean') as file:
@@ -63,10 +59,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
         # deletes 02.bean
         files.pop(str(p / '02.bean'))
 
-    for path in os.listdir(p):
+    for path in p.iterdir():
         print(f'{"=" * 20}[{path}]{"=" * 20}')
-        with open(p / path) as f:
-            print(f.read())
+        print((p / path).read_text())
 ```
 
 ```{tableofcontents}

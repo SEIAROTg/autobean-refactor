@@ -11,10 +11,9 @@ from . import generate
 )
 def test_raw_model_in_sync(meta_model: Type[base.MetaModel]) -> None:
     expected = generate.generate_raw_models(meta_model)
-    if not os.path.exists(generate.raw_model_path(meta_model)):
+    if not generate.raw_model_path(meta_model).exists():
         pytest.fail(f'Meta model {meta_model.__name__} is not generated.')
-    with open(generate.raw_model_path(meta_model)) as f:
-        actual = f.read()
+    actual = generate.raw_model_path(meta_model).read_text()
     assert actual == expected, f'{meta_model.__name__} is out of sync.'
 
 
@@ -27,4 +26,3 @@ def test_raw_model_extra_files() -> None:
         actual_filenames = set(os.listdir(dirname))
         extra_files = actual_filenames - filenames - {'__init__.py', '__pycache__'}
         assert not extra_files, f'Found extra files {extra_files}.'
- 
