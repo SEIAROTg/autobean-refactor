@@ -179,7 +179,7 @@ class Pushtag(MetaModel, BlockCommentable):
 
 class IgnoredLine(MetaModel, BlockCommentable):
     """Ignored line (e.g. `* title`).
-    
+
     Lines starting with certain characters are ignored in beancount. This models captures those lines.
     """
     ignored: 'IGNORED'

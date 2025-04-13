@@ -13,7 +13,7 @@ from ..spacing import Newline
 @internal.tree_model
 class IgnoredLine(internal.SurroundingCommentsMixin, base.RawTreeModel, internal.SpacingAccessorsMixin):
     """Ignored line (e.g. `* title`).
-    
+
     Lines starting with certain characters are ignored in beancount. This models captures those lines.
     """
     RULE = 'ignored_line'

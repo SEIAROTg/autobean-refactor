@@ -1,4 +1,5 @@
 <%
+import textwrap
 from autobean_refactor.modelgen.descriptor import FieldCardinality
 from autobean_refactor.meta_models.base import Floating
 
@@ -58,7 +59,7 @@ if model.block_commentable:
 @internal.tree_model
 class ${model.name}(${', '.join(base_classes)}):
 % if model.docstring:
-    """${model.docstring}"""
+${textwrap.indent(f'"""{model.docstring}"""', prefix=' ' * 4)}
 % endif
     RULE = '${model.rule}'
 % if model.inline:

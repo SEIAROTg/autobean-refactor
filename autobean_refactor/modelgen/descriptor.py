@@ -5,6 +5,7 @@ import functools
 import inspect
 import itertools
 import pathlib
+import re
 from typing import Any, ForwardRef, Iterable, Iterator, Optional, Type, Union, get_args, get_origin
 from lark import load_grammar
 from lark import lexer
@@ -610,7 +611,7 @@ def build_descriptor(meta_model: Type[base.MetaModel]) -> MetaModelDescriptor:
     inline = issubclass(meta_model, base.Inline)
     return MetaModelDescriptor(
         name=meta_model.__name__,
-        docstring=meta_model.__doc__,
+        docstring=meta_model.__doc__ and re.sub(r'^ +', '', meta_model.__doc__, flags=re.MULTILINE),
         rule=stringcase.snakecase(meta_model.__name__),
         block_commentable=block_commentable,
         has_indented_children=has_indented_children,
