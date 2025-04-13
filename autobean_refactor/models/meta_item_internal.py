@@ -103,6 +103,17 @@ class RepeatedRawMetaItemWrapper(
                 return super().__setitem__(i, value)
         self.append(value)
 
+    def __contains__(self, item: object) -> bool:
+        if isinstance(item, str):
+            for x in self:
+                if x.key == item:
+                    return True
+            return False
+        elif isinstance(item, MetaItem):
+            return super().__contains__(item)
+        else:
+            return False
+
     @overload
     def pop(self, index: int = -1) -> MetaItem:
         ...
@@ -223,6 +234,17 @@ class RepeatedMetaItemWrapper(
                 item.value = value
                 return
         self.append(MetaItem.from_value(index, value, indent=self._get_indent()))
+
+    def __contains__(self, item: object) -> bool:
+        if isinstance(item, str):
+            for x in self:
+                if x.key == item:
+                    return True
+            return False
+        elif isinstance(item, MetaItem):
+            return super().__contains__(item)
+        else:
+            return False
 
     @overload
     def pop(self, index: int = -1) -> MetaItem:

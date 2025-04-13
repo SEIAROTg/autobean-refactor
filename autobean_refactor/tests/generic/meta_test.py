@@ -437,7 +437,7 @@ class TestMeta(base.BaseTestModel):
 '''
 
     def test_raw_dict_views(self, simple_close: models.Close) -> None:
-        keys = simple_close.raw_meta.keys() 
+        keys = simple_close.raw_meta.keys()
         assert list(keys) == ['foo', 'bar', 'baz']
         values = simple_close.raw_meta.values()
         self.assert_iterable_same(values, simple_close.meta)
@@ -449,7 +449,7 @@ class TestMeta(base.BaseTestModel):
         assert len(keys) == len(values) == len(items) == 4
 
     def test_raw_dict_views_reversed(self, simple_close: models.Close) -> None:
-        keys = simple_close.raw_meta.keys() 
+        keys = simple_close.raw_meta.keys()
         assert list(reversed(keys)) == ['baz', 'bar', 'foo']
         values = simple_close.raw_meta.values()
         self.assert_iterable_same(reversed(values), reversed(simple_close.meta))
@@ -461,7 +461,7 @@ class TestMeta(base.BaseTestModel):
         assert len(keys) == len(values) == len(items) == 4
 
     def test_dict_views_reversed(self, simple_close: models.Close) -> None:
-        keys = simple_close.meta.keys() 
+        keys = simple_close.meta.keys()
         assert list(reversed(keys)) == ['baz', 'bar', 'foo']
         values = simple_close.meta.values()
         for actual, expected in itertools.zip_longest(reversed(values), reversed(simple_close.meta)):
@@ -509,3 +509,19 @@ class TestMeta(base.BaseTestModel):
 2012-12-12 close Assets:Foo
     foo: 123
     bar: "bar-value"'''
+
+    def test_contains(self, simple_close: models.Close) -> None:
+        for present_key in ('foo', 'bar', 'baz'):
+            assert present_key in simple_close.meta
+            assert present_key in simple_close.raw_meta
+            assert simple_close.raw_meta[present_key] in simple_close.raw_meta
+            assert simple_close.raw_meta[present_key] in simple_close.meta
+            assert copy.deepcopy(simple_close.raw_meta[present_key]) in simple_close.meta
+            assert simple_close.meta[present_key] not in simple_close.meta
+        missing = copy.deepcopy(simple_close.raw_meta['foo'])
+        missing.inline_comment = None
+        for missing_key in ('qux', 'quux', None):
+            assert missing_key not in simple_close.meta
+            assert missing_key not in simple_close.raw_meta
+            assert missing not in simple_close.meta
+            assert missing not in simple_close.raw_meta
