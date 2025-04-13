@@ -133,13 +133,13 @@ class RepeatedRawMetaItemWrapper(
             return default
         raise KeyError(index)
 
-    def keys(self) -> KeysView[str]:
+    def keys(self) -> RepeatedRawMetaKeysView:
         return RepeatedRawMetaKeysView(self)
 
-    def values(self) -> ValuesView[MetaItem]:
+    def values(self) -> RepeatedRawMetaValuesView:
         return RepeatedRawMetaValuesView(self)
 
-    def items(self) -> ItemsView[str, MetaItem]:
+    def items(self) -> RepeatedRawMetaItemsView:
         return RepeatedRawMetaItemsView(self)
 
 
@@ -273,13 +273,13 @@ class RepeatedMetaItemWrapper(
             return default
         raise KeyError(index)
 
-    def keys(self) -> KeysView[str]:
+    def keys(self) -> RepeatedMetaKeysView:
         return RepeatedMetaKeysView(self)
 
-    def values(self) -> ValuesView[Optional[MetaValue]]:
+    def values(self) -> RepeatedMetaValuesView:
         return RepeatedMetaValuesView(self)
 
-    def items(self) -> ItemsView[str, Optional[MetaValue]]:
+    def items(self) -> RepeatedMetaItemsView:
         return RepeatedMetaItemsView(self)
 
 
