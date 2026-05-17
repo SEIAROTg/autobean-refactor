@@ -16,6 +16,7 @@ class TestCurrency(base.BaseTestModel):
             '/NQH21',
             '/NQH21_QNEG21C13100',
             'C345',
+            'V',
             # These are technically invalid currencies but it's difficult to reject them under contextual lexer.
             'TRUE',
             'FALSE',
@@ -33,7 +34,6 @@ class TestCurrency(base.BaseTestModel):
             '/6.3',
             '/CAC_',
             'C_',
-            'V',  # it is valid in v3 syntax
             'Asset',
         ],
     )

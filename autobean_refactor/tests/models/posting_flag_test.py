@@ -7,7 +7,7 @@ from .. import base
 class TestPostingFlag(base.BaseTestModel):
 
     @pytest.mark.parametrize(
-        'text', '*!&#?%PSTCURM',
+        'text', '*!&#?%PSTCURMAZ',
     )
     def test_parse_success(self, text: str) -> None:
         flag = self.parser.parse_token(text, models.PostingFlag)
@@ -19,7 +19,7 @@ class TestPostingFlag(base.BaseTestModel):
             'txn',
             '**',
             '!!',
-            'A'
+            'a',
         ],
     )
     def test_parse_failure(self, text: str) -> None:

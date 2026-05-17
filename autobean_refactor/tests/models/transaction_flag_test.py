@@ -7,7 +7,7 @@ from .. import base
 class TestTransactionFlag(base.BaseTestModel):
 
     @pytest.mark.parametrize(
-        'text', '*!&#?%PSTCURM',
+        'text', '*!&#?%PSTCURMAZ',
     )
     def test_parse_success(self, text: str) -> None:
         flag = self.parser.parse_token(text, models.TransactionFlag)
@@ -25,7 +25,7 @@ class TestTransactionFlag(base.BaseTestModel):
             'TXN',
             '**',
             '!!',
-            'A'
+            'a',
         ],
     )
     def test_parse_failure(self, text: str) -> None:

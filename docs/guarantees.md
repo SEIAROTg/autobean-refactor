@@ -6,9 +6,9 @@
 * ✅ If a fragment is added or removed, everything outside that fragment remains character-by-character identical to the input, except that its surrounding spaces may be added or removed.
 
 Notably, the following are usually true but **NOT** 100% guaranteed:
-* ❗ `autobean-refactor` and beancount v2 parser has exactly same grammar.
+* ❗ `autobean-refactor`'s grammar accepts the union of beancount v2 and v3 syntax.
     * Out-of-line tags / links in transaction are not supported yet.
-    * `autobean-refactor` is based on Unicode while the beancount v2 parser is based on bytes.
+    * `autobean-refactor` is based on Unicode while the beancount parser is based on bytes.
 * ❗ The output is always syntatically valid.
   * It's possible to remove necessary spaces or indent and make it no longer valid.
   * It's possible to forcefully put string into a number token and make it no longer valid.

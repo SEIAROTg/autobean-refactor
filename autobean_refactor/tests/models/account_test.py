@@ -13,7 +13,7 @@ class TestAccount(base.BaseTestModel):
             'Assets:X',
             'Assets:X银行',
             # This is an invalid beancount account name but does pass beancount lexer.
-            # The validation happens in the parser here: https://github.com/beancount/beancount/blob/89bf061b60777be3ae050c5c44fef67d93029130/beancount/parser/grammar.py#L243.
+            # The validation happens in the parser here: https://github.com/beancount/beancount/blob/c492ac996fb74d85dcc7dc5815750542c6a6307d/beancount/parser/grammar.py#L276-L293.
             'Assets:银行',
         ],
     )

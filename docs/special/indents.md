@@ -15,7 +15,7 @@ In `autobean-refactor`, indent is not considered spacing and handled separately.
 
 ## The beancount indentation
 
-The indentation in beancount v2 is handled in a somewhat surprising way. The only distinction is whether a line is indented or not, while the indentation characters / levels don't matter.
+The indentation in beancount is handled in a somewhat surprising way. The only distinction is whether a line is indented or not, while the indentation characters / levels don't matter.
 
 ``````{list-table}
 :header-rows: 1
