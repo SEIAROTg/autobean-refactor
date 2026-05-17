@@ -343,7 +343,7 @@ class cached_custom_property(custom_property[_V, _U]):
 class unordered_node_property(base_rw_property[Optional[_V], _U]):
     def __init__(
             self,
-            inner_property: base_rw_property[MutableSequence[_V | _M], _U],
+            inner_property: base_rw_property[MutableSequence[_V | Any], _U],
             inner_type: Type[_V],
             *,
             prepend: bool = False,

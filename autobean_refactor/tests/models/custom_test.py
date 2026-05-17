@@ -166,9 +166,11 @@ class TestCustom(base.BaseTestModel):
                 custom.raw_values, original_raw_values, new_values):
             if isinstance(actual, models.Amount | models.Account):
                 assert actual is expected
-            else:
+            elif isinstance(actual, (models.EscapedString, models.Date, models.Bool, models.NumberExpr)):
                 assert actual is original
                 assert actual.value == expected
+            else:
+                assert False, "unexpected type"
         assert self.print_model(custom) == (
             '2000-01-01  custom   "foo" "baz" 2000-01-01 TRUE 12 34 EUR Assets:Bar')
 

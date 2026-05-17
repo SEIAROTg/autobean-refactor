@@ -52,6 +52,7 @@ def _check_copy_eq(
         assert a is not b
         assert b.token_store is expected_token_store
         if isinstance(a, models.RawTokenModel) and a.token_store:
+            assert b.token_store is not None
             assert a.token_store.get_index(a) + token_index_offset == b.token_store.get_index(b)
         a_props = _get_comparable_attributes(a)
         b_props = _get_comparable_attributes(b)
@@ -150,7 +151,7 @@ class BaseTestModel:
             else:
                 for child, _ in model.iter_children_formatted():
                     format(child)
-        
+
         backup = copy.deepcopy(node)
         format(node)
 
